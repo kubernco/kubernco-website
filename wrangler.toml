@@ -1,0 +1,23 @@
+name = "kubern-co"
+compatibility_date = "2026-04-01"
+pages_build_output_dir = "."
+
+# ---------- Production ----------
+[env.production]
+[env.production.vars]
+FROM_EMAIL = "hello@kubernco.com"
+TO_EMAIL   = "hudson@kubernco.com"
+
+[[env.production.kv_namespaces]]
+binding = "SUBMISSIONS"
+id = "REPLACE_WITH_PROD_KV_ID"
+
+# ---------- Preview ----------
+[env.preview]
+[env.preview.vars]
+FROM_EMAIL = "hello@kubernco.com"
+TO_EMAIL   = "hudson@kubernco.com"
+
+[[env.preview.kv_namespaces]]
+binding = "SUBMISSIONS"
+id = "REPLACE_WITH_PREVIEW_KV_ID"

@@ -1,0 +1,11 @@
+.dev.vars
+.wrangler/
+node_modules/
+.DS_Store
+.tmp/
+*.af~lock~
+
+# Source asset originals (huge — exceed GitHub 100MB file limit).
+# Optimized web copies live in /images/ and /fonts/.
+/assets/
+/Kubern Wesite mockup.af
