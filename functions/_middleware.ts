@@ -1,13 +1,8 @@
 interface Env {}
 
 export const onRequest: PagesFunction<Env> = async (context) => {
-  const url = new URL(context.request.url);
-
-  // Redirect pages.dev preview hostname to the custom domain for production
-  if (url.hostname.endsWith(".pages.dev") && !url.hostname.startsWith("preview.")) {
-    const target = `https://kubernco.com${url.pathname}${url.search}`;
-    return Response.redirect(target, 301);
-  }
+  // Note: pages.dev → kubernco.com redirect intentionally disabled until the
+  // custom domain is pointed at Cloudflare. Re-enable once kubernco.com resolves.
 
   let response: Response;
   try {
