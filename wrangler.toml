@@ -10,7 +10,7 @@ TO_EMAIL   = "hudson@kubernco.com"
 
 [[env.production.kv_namespaces]]
 binding = "SUBMISSIONS"
-id = "REPLACE_WITH_PROD_KV_ID"
+id = "6d27e42f3bb74617862df12532db69c9"
 
 # ---------- Preview ----------
 [env.preview]
@@ -20,4 +20,4 @@ TO_EMAIL   = "hudson@kubernco.com"
 
 [[env.preview.kv_namespaces]]
 binding = "SUBMISSIONS"
-id = "REPLACE_WITH_PREVIEW_KV_ID"
+id = "46558ffe6570439da71508b03309efff"
