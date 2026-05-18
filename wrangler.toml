@@ -6,7 +6,7 @@ pages_build_output_dir = "."
 [env.production]
 [env.production.vars]
 FROM_EMAIL = "hello@kubernco.com"
-TO_EMAIL   = "hudson@kubernco.com"
+TO_EMAIL   = "jhudsongraves@gmail.com"
 
 [[env.production.kv_namespaces]]
 binding = "SUBMISSIONS"
@@ -16,7 +16,7 @@ id = "6d27e42f3bb74617862df12532db69c9"
 [env.preview]
 [env.preview.vars]
 FROM_EMAIL = "hello@kubernco.com"
-TO_EMAIL   = "hudson@kubernco.com"
+TO_EMAIL   = "jhudsongraves@gmail.com"
 
 [[env.preview.kv_namespaces]]
 binding = "SUBMISSIONS"
