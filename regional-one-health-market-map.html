@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Regional One Health — Market Geography</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    @font-face {
+      font-family: "Magnolia";
+      src: url("/fonts/Magnolia.ttf") format("truetype");
+      font-weight: 400;
+      font-display: swap;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+      --ink:        #1d3e49;
+      --ink-soft:   #34525c;
+      --cream:      #f3ede1;
+      --cream-deep: #e8dfcc;
+      --sand:       #d9cdb3;
+      --sky:        #2c5d70;
+      --rule:       rgba(29, 62, 73, 0.25);
+      --ff-accent:  "Magnolia", "Cormorant Garamond", Georgia, serif;
+      --ff-body:    "EB Garamond", Georgia, "Times New Roman", serif;
+      --shadow:     0 4px 20px rgba(29, 62, 73, 0.18);
+    }
+
+    body { margin: 0; padding: 0; font-family: var(--ff-body); background: var(--cream-deep); }
+    #map { height: 100vh; width: 100vw; }
+
+    /* County labels */
+    .county-label {
+      background: transparent;
+      border: none;
+      color: var(--ink-soft);
+      font-family: var(--ff-body);
+      font-size: 9.5px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      white-space: nowrap;
+      pointer-events: none;
+      text-shadow: 0 0 4px rgba(243,237,225,0.95), 0 0 8px rgba(243,237,225,0.8);
+    }
+
+    /* Popup */
+    .leaflet-popup-content-wrapper {
+      background: var(--cream);
+      border-radius: 4px;
+      border: 1px solid var(--sand);
+      box-shadow: var(--shadow);
+      padding: 0;
+    }
+    .leaflet-popup-tip { background: var(--cream); }
+    .leaflet-popup-close-button {
+      top: 10px !important;
+      right: 12px !important;
+      color: var(--ink-soft) !important;
+      font-size: 18px !important;
+    }
+    .leaflet-popup-close-button:hover { color: var(--ink) !important; }
+    .leaflet-popup-content {
+      margin: 22px 24px;
+      font-family: var(--ff-body);
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--ink);
+      min-width: 220px;
+      max-width: 300px;
+      padding-right: 16px;
+    }
+    .leaflet-popup-content strong.popup-title {
+      display: block;
+      font-family: var(--ff-accent);
+      font-style: italic;
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--ink);
+      margin-bottom: 5px;
+      line-height: 1.3;
+    }
+    .popup-tag {
+      display: inline-block;
+      font-family: var(--ff-body);
+      font-size: 9.5px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 0;
+      margin-bottom: 7px;
+      border: 1px solid;
+    }
+    .tag-roh     { background: rgba(44,93,112,0.08);  color: var(--sky);      border-color: var(--sky); }
+    .tag-comp    { background: rgba(185,28,28,0.07);   color: #991b1b;         border-color: #b91c1c; }
+    .tag-closed  { background: transparent;             color: var(--ink-soft); border-color: var(--sand); }
+    .tag-partner { background: rgba(52,107,66,0.08);   color: #3d6b47;         border-color: rgba(52,107,66,0.4); }
+    .tag-county  { background: transparent;             color: var(--ink-soft); border-color: var(--sand); }
+    .popup-stat  { color: var(--ink-soft); font-size: 12px; }
+    .popup-stat strong { color: var(--ink); }
+    .popup-alert {
+      margin-top: 6px;
+      padding: 6px 8px;
+      background: var(--cream-deep);
+      border-left: 2px solid var(--ink-soft);
+      font-size: 11px;
+      color: var(--ink-soft);
+      line-height: 1.5;
+    }
+
+    /* Legend */
+    .legend {
+      background: var(--cream);
+      padding: 14px 16px;
+      border-radius: 0;
+      border: 1px solid var(--sand);
+      box-shadow: var(--shadow);
+      font-family: var(--ff-body);
+      font-size: 12px;
+      line-height: 1.6;
+      min-width: 200px;
+      color: var(--ink);
+    }
+    .legend-title {
+      font-family: var(--ff-accent);
+      font-style: italic;
+      font-size: 11px;
+      color: var(--ink-soft);
+      margin-bottom: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .legend-row { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; color: var(--ink); }
+    .ldot {
+      width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0;
+      border: 2px solid rgba(243,237,225,0.9);
+      box-shadow: 0 1px 3px rgba(29,62,73,0.2);
+    }
+    .legend-divider { border: none; border-top: 1px solid var(--sand); margin: 8px 0; }
+    .legend-sub { font-size: 10.5px; color: var(--ink-soft); line-height: 1.5; }
+
+    .leaflet-control-attribution { font-size: 9px !important; opacity: 0.4; }
+  </style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+  const map = L.map('map', {
+    zoomControl: false,
+    attributionControl: true
+  }).setView([35.22, -89.95], 8);
+
+  L.control.zoom({ position: 'topright' }).addTo(map);
+
+  // CartoDB Positron — clean, muted basemap, roads are subtle gray
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '© OpenStreetMap © CARTO',
+    subdomains: 'abcd',
+    maxZoom: 16
+  }).addTo(map);
+
+  const ROH = [35.1495, -90.0490];
+  const MI  = 1609.34;
+
+  // ── Catchment rings ──────────────────────────────────────────────────────────
+  L.circle(ROH, {
+    radius: 60 * MI,
+    color: '#93c5fd', fillColor: '#93c5fd', fillOpacity: 0.05,
+    weight: 1.5, dashArray: '10 7', interactive: false
+  }).addTo(map);
+
+  L.circle(ROH, {
+    radius: 20 * MI,
+    color: '#3b82f6', fillColor: '#3b82f6', fillOpacity: 0.06,
+    weight: 1.5, dashArray: '6 5', interactive: false
+  }).addTo(map);
+
+  // Label at a point on the circumference (bearing = NE, ~45°)
+  function ringLabelPoint(center, radiusMi, bearingDeg) {
+    const R = 6371000, d = radiusMi * 1609.34;
+    const lat1 = center[0] * Math.PI / 180, lng1 = center[1] * Math.PI / 180;
+    const brng = bearingDeg * Math.PI / 180;
+    const lat2 = Math.asin(Math.sin(lat1) * Math.cos(d / R) + Math.cos(lat1) * Math.sin(d / R) * Math.cos(brng));
+    const lng2 = lng1 + Math.atan2(Math.sin(brng) * Math.sin(d / R) * Math.cos(lat1), Math.cos(d / R) - Math.sin(lat1) * Math.sin(lat2));
+    return [lat2 * 180 / Math.PI, lng2 * 180 / Math.PI];
+  }
+
+  function addRingLabel(center, radiusMi, bearingDeg, text, color) {
+    const pt = ringLabelPoint(center, radiusMi, bearingDeg);
+    L.marker(pt, {
+      icon: L.divIcon({
+        className: '',
+        html: `<span style="font-family:'EB Garamond',serif;font-size:11px;color:${color};background:rgba(243,237,225,0.82);padding:1px 5px;border-radius:2px;white-space:nowrap;letter-spacing:0.04em;">${text}</span>`,
+        iconAnchor: [0, 8]
+      }),
+      interactive: false
+    }).addTo(map);
+  }
+
+  addRingLabel(ROH, 60, 45, '60 mi', '#60a5fa');
+  addRingLabel(ROH, 20, 45, '20 mi', '#3b82f6');
+
+  // ── County birth bubbles — sized by volume, colored by birth rate ────────────
+  // Rate tiers:  < 5.5% = light | 5.5–7% = mid | > 7% = dark
+  const MAX_BIRTHS = 11007;
+
+  const counties = [
+    { coords: [35.18, -89.86], name: 'Shelby Co., TN',     pop: 919173,  births: 11007, women1550: 227790, rate: 4.8,  share: '~14%' },
+    { coords: [35.50, -89.73], name: 'Tipton Co., TN',      pop: 61553,   births: 643,   women1550: 13928,  rate: 4.6  },
+    { coords: [35.20, -89.40], name: 'Fayette Co., TN',     pop: 43267,   births: 481,   women1550: 8441,   rate: 5.7  },
+    { coords: [35.76, -89.55], name: 'Lauderdale Co., TN',  pop: 24784,   births: 306,   women1550: 5182,   rate: 5.9  },
+    { coords: [35.18, -88.98], name: 'Hardeman Co., TN',    pop: 25433,   births: 293,   women1550: 4600,   rate: 6.4  },
+    { coords: [35.50, -89.27], name: 'Haywood Co., TN',     pop: 17475,   births: 184,   women1550: 3843,   rate: 4.8  },
+    { coords: [35.25, -90.30], name: 'Crittenden Co., AR',  pop: 47266,   births: 704,   women1550: 11250,  rate: 6.3  },
+    { coords: [35.00, -90.72], name: 'St. Francis Co., AR', pop: 22400,   births: 401,   women1550: 3997,   rate: 10.0 },
+    { coords: [34.83, -89.88], name: 'DeSoto Co., MS',      pop: 191301,  births: 3149,  women1550: 48645,  rate: 6.5  },
+    { coords: [34.75, -89.45], name: 'Marshall Co., MS',    pop: 33979,   births: 438,   women1550: 7302,   rate: 6.0  },
+    { coords: [34.65, -89.93], name: 'Tate Co., MS',        pop: 28321,   births: 400,   women1550: 6784,   rate: 5.9  },
+    { coords: [34.64, -90.27], name: 'Tunica Co., MS',      pop: 9475,    births: 130,   women1550: 2258,   rate: 5.8  },
+  ];
+
+  function rateColor(rate) {
+    if (rate >= 7)   return { fill: '#1d3e49', stroke: '#0f2832' }; // ink — high rate
+    if (rate >= 5.5) return { fill: '#2c5d70', stroke: '#1d4e5f' }; // sky — mid
+    return                  { fill: '#7fb3c8', stroke: '#5a9ab5' }; // light — lower rate
+  }
+
+  counties.forEach(c => {
+    const r   = Math.max(7, Math.round(Math.sqrt(c.births / MAX_BIRTHS) * 48));
+    const col = rateColor(c.rate);
+    const alert = c.rate >= 7
+      ? `<div class="popup-alert">Birth rate ${c.rate}% — nearly 2× catchment avg. High-need, likely underserved.</div>`
+      : '';
+
+    L.circleMarker(c.coords, {
+      radius: r,
+      fillColor: col.fill,
+      color: col.stroke,
+      fillOpacity: 0.28,
+      weight: 1.5,
+      zIndexOffset: -1000
+    }).addTo(map).bindPopup(
+      `<strong class="popup-title">${c.name}</strong>` +
+      `<span class="popup-tag tag-county">County · ACS 2023</span><br>` +
+      `<span class="popup-stat">Population: <strong>${c.pop.toLocaleString()}</strong></span><br>` +
+      `<span class="popup-stat">Births / yr: <strong>${c.births.toLocaleString()}</strong></span><br>` +
+      `<span class="popup-stat">Women 15–50: <strong>${c.women1550.toLocaleString()}</strong></span><br>` +
+      `<span class="popup-stat">Birth rate: <strong>${c.rate}%</strong></span>` +
+      alert
+    );
+
+    // County name label — subtle, no birth count (bubble conveys that visually)
+    L.marker(c.coords, {
+      icon: L.divIcon({ className: 'county-label', html: c.name, iconSize: null, iconAnchor: [0, -r - 4] }),
+      interactive: false,
+      zIndexOffset: -2000
+    }).addTo(map);
+  });
+
+  // ── Marker icon helper ───────────────────────────────────────────────────────
+  function dot(color, size, pulse) {
+    const ring = pulse
+      ? `<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:${size + 10}px;height:${size + 10}px;border-radius:50%;border:2px solid ${color};opacity:0.4;animation:none"></div>`
+      : '';
+    return L.divIcon({
+      className: '',
+      html: `<div style="position:relative;width:${size}px;height:${size}px">${ring}<div style="position:absolute;top:0;left:0;width:${size}px;height:${size}px;background:${color};border:2.5px solid white;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.3)"></div></div>`,
+      iconSize: [size, size],
+      iconAnchor: [size / 2, size / 2],
+      popupAnchor: [0, -(size / 2) - 6]
+    });
+  }
+
+  // ── Regional One Health ──────────────────────────────────────────────────────
+  L.marker(ROH, { icon: dot('#1d3e49', 22), zIndexOffset: 2000 }).addTo(map).bindPopup(
+    `<strong class="popup-title">Regional One Health — Labor &amp; Delivery</strong>` +
+    `<span class="popup-tag tag-roh">ROH · Only hospital CNM delivery in Memphis</span><br>` +
+    `<span class="popup-stat">877 Jefferson Ave, Memphis, TN</span><br>` +
+    `<span class="popup-stat">Deliveries: <strong>2,317 / yr (2025)</strong> · −153/yr trend</span><br>` +
+    `<span class="popup-stat">Market share: <strong>~13%</strong></span><br>` +
+    `<span class="popup-stat">CNM births: <strong>40+ / month</strong></span>` +
+    `<div class="popup-alert">Only Memphis hospital with CNM-attended delivery. No competitor matches it.</div>`
+  );
+
+  // ── Competitor hospitals — sized by delivery volume ──────────────────────────
+  const hospitals = [
+    {
+      coords: [35.1195, -89.8558], size: 20,
+      name: 'Baptist Memorial Women\'s Hospital',
+      tag: 'Competitor · ~33% market share',
+      cls: 'tag-comp',
+      stats: 'Deliveries: ~5,300/yr · Leapfrog D · No CNM',
+      note: 'Dominates organic search. Default choice for commercially insured patients. No CNM delivery option.'
+    },
+    {
+      coords: [35.0881, -89.8133], size: 17,
+      name: 'Methodist Le Bonheur Germantown',
+      tag: 'Competitor · ~22% market share',
+      cls: 'tag-comp',
+      stats: 'Deliveries: ~3,480/yr · Leapfrog C · No CNM',
+      note: 'Primary Methodist L&amp;D after South closure. Actively capturing displaced patients. C-section rate 33.2% (above 23.6% benchmark).'
+    },
+    {
+      coords: [35.1085, -89.9085], size: 16,
+      name: 'Saint Francis Hospital — "The Nest"',
+      tag: 'Competitor · ~16% market share (unverified)',
+      cls: 'tag-comp',
+      stats: 'Deliveries: ~2,000–4,000/yr · Not Leapfrog-graded · No CNM',
+      note: '5959 Park Ave, East Memphis. US News "High Performing" maternity 2024. Level II NICU. Declined Leapfrog survey — quality metrics not public.'
+    },
+    {
+      coords: [34.9560, -89.9850], size: 13,
+      name: 'Baptist Memorial Hospital-DeSoto',
+      tag: 'Competitor · ~8% market share',
+      cls: 'tag-comp',
+      stats: 'Deliveries: ~1,258/yr · Leapfrog B · No CNM',
+      note: 'Southaven, MS. Dominant in DeSoto County. C-section rate 30.8%. Adjacent to DeSoto Community Health Center FQHC — likely captures that referral flow.'
+    },
+    {
+      coords: [34.9620, -89.8597], size: 11,
+      name: 'Methodist Olive Branch',
+      tag: 'Competitor · ~4% market share',
+      cls: 'tag-comp',
+      stats: 'Deliveries: ~582/yr · Leapfrog A · No CNM',
+      note: 'North MS / DeSoto County. Consecutive Leapfrog A grades. New facility. C-section rate 24.2% — closest to benchmark of any competitor.'
+    },
+    {
+      coords: [35.5617, -89.6446], size: 10,
+      name: 'Baptist Memorial Hospital-Tipton',
+      tag: 'Competitor · ~2% market share',
+      cls: 'tag-comp',
+      stats: 'Deliveries: ~323/yr · Not Leapfrog-graded · CNM unknown',
+      note: 'Covington, TN. Small community hospital. No independent FQHC in county — channel is Baptist-captured. Competes with ROH\'s Lauderdale County CNM reach.'
+    },
+    {
+      coords: [35.0078, -90.0283], size: 10, closed: true,
+      name: 'Methodist South (CLOSED)',
+      tag: 'Closed Aug 2025',
+      cls: 'tag-closed',
+      stats: '~475 deliveries/yr displaced',
+      note: 'Closed August 1, 2025. No evidence ROH acted at the moment of displacement. Some patients migrated to Methodist Germantown. Window is closing but still open.'
+    },
+  ];
+
+  hospitals.forEach(h => {
+    const color = h.closed ? '#9ca3af' : '#b91c1c';
+    L.marker(h.coords, { icon: dot(color, h.size), zIndexOffset: 500 }).addTo(map).bindPopup(
+      `<strong class="popup-title">${h.name}</strong>` +
+      `<span class="popup-tag ${h.cls}">${h.tag}</span><br>` +
+      `<span class="popup-stat">${h.stats}</span><br>` +
+      `<span class="popup-stat">${h.note}</span>`
+    );
+  });
+
+  // ── Out-of-hospital competitors (birth center / home birth) ──────────────────
+  const altBirth = [
+    {
+      coords: [35.1455, -90.0110],
+      name: 'CHOICES Birth Center',
+      tag: 'Direct CNM competitor',
+      stats: '~60–75 births/yr · CNM-staffed · AABC-accredited 2024',
+      note: '1203 Poplar Ave, Memphis. Only freestanding birth center in Memphis. Medicaid/sliding-scale. Shelby County Commission-funded. Patients who find CHOICES may never consider ROH.'
+    },
+    {
+      coords: [35.1415, -90.0415],
+      name: 'Full Circle Midwifery (Memphis)',
+      tag: 'Home birth competitor',
+      stats: '~20–50 births/yr · CPMs + CNMs · Home birth',
+      note: '1314 Peabody Ave, Memphis. Also has DeSoto County location in Hernando, MS. Competes for midwife-preference patients who are invisible to ROH marketing.'
+    },
+    {
+      coords: [34.8220, -89.9934],
+      name: 'Full Circle Midwifery (Hernando, MS)',
+      tag: 'Home birth competitor — DeSoto County',
+      stats: 'CPMs + CNMs · Home birth and prenatal',
+      note: '4762 W Commerce St, Hernando. Captures midwife-preference DeSoto patients before they encounter ROH.'
+    },
+  ];
+
+  altBirth.forEach(a => {
+    L.marker(a.coords, { icon: dot('#c4861a', 11), zIndexOffset: 400 }).addTo(map).bindPopup(
+      `<strong class="popup-title">${a.name}</strong>` +
+      `<span class="popup-tag" style="background:rgba(196,134,26,0.08);color:#7d5510;border:1px solid rgba(196,134,26,0.5);border-radius:0">${a.tag}</span><br>` +
+      `<span class="popup-stat">${a.stats}</span><br>` +
+      `<span class="popup-stat">${a.note}</span>`
+    );
+  });
+
+  // ── Referral partners ────────────────────────────────────────────────────────
+  const partners = [
+    {
+      coords: [35.1418, -90.1834],
+      name: 'EAFHC — East Arkansas Family Health Center',
+      stats: 'Prenatal only · 7 sites across Crittenden + adjacent counties · Medicaid',
+      note: 'West Memphis, AR. No delivery capacity. Without a ROH referral agreement, every EAFHC patient defaults to Baptist.'
+    },
+    {
+      coords: [35.1450, -90.1950],
+      name: 'ArCare — West Memphis',
+      stats: 'Prenatal only · FQHC · Medicaid/sliding scale',
+      note: '318 S Rhodes St. Second Crittenden County prenatal FQHC, distinct from EAFHC. Additional feeder with no confirmed ROH agreement.'
+    },
+    {
+      coords: [35.7445, -89.5286],
+      name: 'Lauderdale County — ROH CNM Site',
+      stats: 'ROH-operated · CNM expansion Nov 2024 · Ripley, TN',
+      note: 'Infrastructure exists. No delivery on-site — patients travel to Memphis. Zero marketing follow-through detected since UTHSC press release.'
+    },
+    {
+      coords: [35.1540, -90.0380],
+      name: 'Memphis Morning Center',
+      stats: 'Free prenatal care · CNM Davin Johnson (ROH-affiliated)',
+      note: 'Midtown Memphis. 1,109 babies delivered since 2013. CNM is ROH-affiliated but relationship is informal. Formalizing this + adding ROH to patient materials costs nothing.',
+      alert: 'Confirmed ROH affiliation — easy win to formalize'
+    },
+    {
+      coords: [35.1350, -90.0600],
+      name: 'Christ Community Health Services',
+      stats: 'FQHC · 60,000+ patients/yr · OB/GYNs deliver 1,100+ babies/yr',
+      note: 'Memphis (6 locations across Shelby County). Largest FQHC in Memphis. Hospital delivery affiliations unknown.',
+      alert: 'Critical unknown: which hospitals do their OBs deliver at? Call (901) 842-3160.'
+    },
+    {
+      coords: [34.9700, -89.9760],
+      name: 'DeSoto Community Health Center',
+      stats: 'FQHC · Prenatal services · Medicaid/sliding scale · Southaven, MS',
+      note: '7535 Airways Blvd. Adjacent to Baptist-DeSoto. Referral independence from Baptist needs verification.',
+      alert: 'Verify: is there a formal referral agreement with Baptist-DeSoto?'
+    },
+    {
+      coords: [34.6850, -90.3800],
+      name: 'Aaron E. Henry CHSC — Tunica',
+      stats: 'FQHC · Tunica + 4 surrounding counties · DART transport available',
+      note: '1820 Peabody Ave, Tunica MS. Prenatal care with no local delivery capacity. Patients already travel to Memphis. ROH is the logical destination.',
+      alert: 'High opportunity: rural, high Medicaid, no local L&D competitor'
+    },
+    {
+      coords: [35.1472, -90.0155],
+      name: 'Planned Parenthood Memphis',
+      stats: 'Prenatal counseling · TennCare enrollment · Medicaid referrals',
+      note: 'Midtown + East Memphis. Refers patients continuing pregnancies to prenatal providers. ROH should be on their referral list as the CNM-capable hospital.'
+    },
+  ];
+
+  partners.forEach(p => {
+    const alertHtml = p.alert
+      ? `<div class="popup-alert">${p.alert}</div>`
+      : '';
+    L.marker(p.coords, { icon: dot('#3d6b47', 12), zIndexOffset: 300 }).addTo(map).bindPopup(
+      `<strong class="popup-title">${p.name}</strong>` +
+      `<span class="popup-tag tag-partner">Referral partner / opportunity</span><br>` +
+      `<span class="popup-stat">${p.stats}</span><br>` +
+      `<span class="popup-stat">${p.note}</span>` +
+      alertHtml
+    );
+  });
+
+  // ── Legend ───────────────────────────────────────────────────────────────────
+  const legend = L.control({ position: 'bottomright' });
+  legend.onAdd = function () {
+    const d = L.DomUtil.create('div', 'legend');
+    d.innerHTML = `
+      <div class="legend-title">Regional One Health — Market Map</div>
+
+      <div class="legend-row"><div class="ldot" style="background:#1d3e49"></div>Regional One Health</div>
+      <div class="legend-row"><div class="ldot" style="background:#b91c1c"></div>Competitor hospital</div>
+      <div class="legend-row"><div class="ldot" style="background:#9ca3af"></div>Competitor (closed)</div>
+      <div class="legend-row"><div class="ldot" style="background:#c4861a"></div>Out-of-hospital competitor</div>
+      <div class="legend-row"><div class="ldot" style="background:#3d6b47"></div>Referral partner / FQHC</div>
+
+      <hr class="legend-divider">
+
+      <div style="font-size:11px;color:var(--ink-soft);margin-bottom:4px;letter-spacing:0.04em;text-transform:uppercase;">County bubbles — births/yr</div>
+      <div class="legend-row">
+        <svg width="34" height="18" style="flex-shrink:0"><circle cx="9" cy="9" r="8" fill="#7fb3c8" fill-opacity="0.3" stroke="#5a9ab5" stroke-width="1.5"/><circle cx="26" cy="9" r="5" fill="#7fb3c8" fill-opacity="0.3" stroke="#5a9ab5" stroke-width="1.5"/></svg>
+        <span class="legend-sub">Size = volume</span>
+      </div>
+      <div class="legend-row"><div style="width:11px;height:11px;border-radius:50%;background:#7fb3c8;opacity:0.7;flex-shrink:0"></div><span class="legend-sub">Rate &lt; 5.5%</span></div>
+      <div class="legend-row"><div style="width:11px;height:11px;border-radius:50%;background:#2c5d70;opacity:0.7;flex-shrink:0"></div><span class="legend-sub">Rate 5.5–7%</span></div>
+      <div class="legend-row"><div style="width:11px;height:11px;border-radius:50%;background:#1d3e49;opacity:0.7;flex-shrink:0"></div><span class="legend-sub">Rate &gt; 7% — high-need</span></div>
+
+      <hr class="legend-divider">
+      <div class="legend-sub">Catchment total: 18,136 births/yr<br>ROH share: ~14% · Click any element for detail<br>ACS 5-yr 2023 · Leapfrog May 2026</div>
+    `;
+    return d;
+  };
+  legend.addTo(map);
+</script>
+</body>
+</html>
