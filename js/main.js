@@ -1,45 +1,20 @@
-// Kubern Co — main.js
 (() => {
-  // ---------- AOS scroll-reveal ----------
-  if (window.AOS) {
-    window.AOS.init({
-      duration: 800,
-      easing: "ease-out-cubic",
-      once: true,
-      offset: 80,
-    });
-  }
+  // Scroll-reveal via IntersectionObserver
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.15, rootMargin: "0px 0px -60px 0px" }
+  );
 
-  // ---------- Nav drawer ----------
-  const toggle = document.querySelector(".nav-toggle");
-  const nav    = document.getElementById("site-nav");
-  const scrim  = document.querySelector(".nav-scrim");
-  const close  = document.querySelector(".nav-close");
+  document.querySelectorAll(".anim").forEach((el) => observer.observe(el));
 
-  const setOpen = (open) => {
-    toggle.setAttribute("aria-expanded", String(open));
-    nav.setAttribute("aria-hidden", String(!open));
-    nav.classList.toggle("open", open);
-    if (open) {
-      scrim.hidden = false;
-      requestAnimationFrame(() => scrim.classList.add("visible"));
-      document.body.style.overflow = "hidden";
-    } else {
-      scrim.classList.remove("visible");
-      setTimeout(() => { scrim.hidden = true; }, 300);
-      document.body.style.overflow = "";
-    }
-  };
-
-  toggle.addEventListener("click", () => setOpen(nav.getAttribute("aria-hidden") === "true"));
-  close.addEventListener("click", () => setOpen(false));
-  scrim.addEventListener("click", () => setOpen(false));
-  nav.querySelectorAll("a").forEach(a => a.addEventListener("click", () => setOpen(false)));
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && nav.classList.contains("open")) setOpen(false);
-  });
-
-  // ---------- Contact form ----------
+  // Contact form
   const form = document.getElementById("contact-form");
   const status = form.querySelector(".form-status");
   const btn = form.querySelector("button[type=submit]");
@@ -49,33 +24,34 @@
     status.className = "form-status";
     status.textContent = "";
 
-    const data = Object.fromEntries(new FormData(form).entries());
-    if (!data.name || !data.organization || !data.email) {
+    const email = form.querySelector("[name=email]").value.trim();
+    const message = form.querySelector("[name=message]").value.trim();
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       status.className = "form-status error";
-      status.textContent = "Please fill in name, organization, and email.";
+      status.textContent = "A valid email address is required.";
       return;
     }
 
     btn.disabled = true;
-    const originalLabel = btn.textContent;
     btn.textContent = "Sending…";
 
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ email, message }),
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      status.className = "form-status success";
-      status.textContent = "Thank you. We'll be in touch shortly.";
+      status.className = "form-status";
+      status.textContent = "Sent. I'll be in touch.";
       form.reset();
-    } catch (err) {
+    } catch {
       status.className = "form-status error";
-      status.textContent = "Something went wrong. Please email hello@kubernco.com.";
+      status.textContent = "Something went wrong. Email hello@kubernco.com directly.";
     } finally {
       btn.disabled = false;
-      btn.textContent = originalLabel;
+      btn.textContent = "Send";
     }
   });
 })();

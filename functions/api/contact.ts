@@ -6,8 +6,6 @@ interface Env {
 }
 
 interface ContactPayload {
-  name: string;
-  organization: string;
   email: string;
   message?: string;
 }
@@ -17,8 +15,6 @@ function clean(s: unknown, max = 2000): string {
 }
 
 function validate(d: ContactPayload): string | null {
-  if (!d.name || d.name.length < 2) return "Name is required";
-  if (!d.organization || d.organization.length < 2) return "Organization is required";
   if (!d.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email)) return "Valid email required";
   return null;
 }
@@ -35,8 +31,6 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   }
 
   const data: ContactPayload = {
-    name: clean(body.name, 200),
-    organization: clean(body.organization, 200),
     email: clean(body.email, 320).toLowerCase(),
     message: clean(body.message, 4000),
   };
@@ -65,8 +59,6 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
 async function sendEmail(env: Env, data: ContactPayload) {
   const html = [
-    `<p><strong>Name:</strong> ${esc(data.name)}</p>`,
-    `<p><strong>Organization:</strong> ${esc(data.organization)}</p>`,
     `<p><strong>Email:</strong> ${esc(data.email)}</p>`,
     data.message
       ? `<p><strong>Message:</strong><br>${esc(data.message).replace(/\n/g, "<br>")}</p>`
@@ -83,7 +75,7 @@ async function sendEmail(env: Env, data: ContactPayload) {
       from: env.FROM_EMAIL,
       to: env.TO_EMAIL,
       reply_to: data.email,
-      subject: `Kubern Co — Contact from ${data.name} (${data.organization})`,
+      subject: `Kubern Co — message from ${esc(data.email)}`,
       html,
     }),
   });
