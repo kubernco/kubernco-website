@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reversing the Curve — ROH L&D Marketing Playbook</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Upright:wght@300;400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:        #1d3e49;
+      --ink-soft:   #34525c;
+      --cream:      #f3ede1;
+      --cream-deep: #e8dfcc;
+      --sand:       #d9cdb3;
+      --sky:        #2c5d70;
+      --rule:       rgba(29, 62, 73, 0.25);
+      --gold:       #c9a96e;
+
+      --ff-display: "Playfair Display", "Cormorant Garamond", Georgia, serif;
+      --ff-accent:  "Magnolia", "Cormorant Garamond", Georgia, serif;
+      --ff-body:    "EB Garamond", Georgia, "Times New Roman", serif;
+      --ff-word:    "Cormorant Upright", Georgia, serif;
+
+      --radius: 20px;
+      --shadow: 0 18px 50px -20px rgba(0, 0, 0, 0.45);
+
+      --max: 980px;
+      --pad: clamp(1.25rem, 4vw, 2.5rem);
+    }
+
+    html { font-size: 16px; }
+
+    body {
+      font-family: var(--ff-body);
+      background: var(--cream-deep);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    /* ── TYPOGRAPHY ── */
+
+    h1, h2, h3, h4 {
+      font-family: var(--ff-display);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      line-height: 1.08;
+    }
+
+    .eyebrow {
+      font-family: var(--ff-accent);
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      margin-bottom: 1rem;
+    }
+
+    .rule {
+      width: 80px;
+      height: 2px;
+      background: var(--gold);
+      margin-bottom: 2rem;
+    }
+
+    .wordmark {
+      font-family: var(--ff-word);
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      padding: 0.35rem 1.1rem;
+      border: 1px solid currentColor;
+      opacity: 0.5;
+      line-height: 1;
+      display: inline-block;
+    }
+
+    /* ── SLIDE SURFACES ── */
+
+    .slide-ink   { background: var(--ink);        color: var(--cream); }
+    .slide-cream { background: var(--cream);      color: var(--ink);   }
+    .slide-deep  { background: var(--cream-deep); color: var(--ink);   }
+    .slide-sand  { background: var(--sand);       color: var(--ink);   }
+
+    .slide-ink .eyebrow  { color: var(--sand); }
+    .slide-ink .rule     { background: var(--gold); }
+    .slide-sand .eyebrow { color: var(--ink-soft); }
+
+    /* ── FOOTER BAR ── */
+
+    .footer-bar {
+      height: 5px;
+      background: var(--gold);
+      opacity: 0.5;
+      width: 100%;
+    }
+
+    /* ── COVER ── */
+
+    .cover {
+      background: var(--ink);
+      color: var(--cream);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: clamp(3rem, 6vw, 5rem) clamp(2rem, 8vw, 6rem);
+      position: relative;
+      page-break-after: always;
+    }
+
+    .cover-top {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .cover-divider {
+      width: 1px;
+      height: 1rem;
+      background: rgba(243, 237, 225, 0.25);
+    }
+
+    .cover-unit {
+      font-family: var(--ff-body);
+      font-size: 0.85rem;
+      color: rgba(243, 237, 225, 0.5);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .cover-body {
+      max-width: 720px;
+    }
+
+    .cover-title {
+      font-family: var(--ff-display);
+      font-size: clamp(3.5rem, 8vw, 7rem);
+      font-weight: 700;
+      line-height: 1.0;
+      letter-spacing: 0.01em;
+      text-transform: uppercase;
+      color: var(--cream);
+      margin-bottom: 2rem;
+    }
+
+    .cover-title em {
+      font-style: italic;
+      color: var(--gold);
+      text-transform: none;
+    }
+
+    .cover-label {
+      font-family: var(--ff-accent);
+      font-size: 0.85rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--sand);
+      margin-bottom: 1.75rem;
+    }
+
+    .cover-objective {
+      font-family: var(--ff-body);
+      font-size: 1.15rem;
+      color: rgba(243, 237, 225, 0.75);
+      line-height: 1.7;
+      max-width: 560px;
+      border-left: 2px solid var(--gold);
+      padding-left: 1.5rem;
+    }
+
+    .cover-objective strong {
+      color: var(--cream);
+      font-weight: 500;
+    }
+
+    .cover-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-top: 1px solid rgba(243, 237, 225, 0.15);
+      padding-top: 2rem;
+    }
+
+    .cover-meta {
+      font-family: var(--ff-body);
+      font-size: 0.9rem;
+      color: rgba(243, 237, 225, 0.5);
+    }
+
+    .cover-meta strong {
+      font-family: var(--ff-accent);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--sand);
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    /* ── DEPENDENCY MAP ── */
+
+    .dep-section {
+      padding: clamp(3rem, 8vw, 5rem) clamp(2rem, 8vw, 6rem);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .dep-section p {
+      font-family: var(--ff-body);
+      font-size: 1.05rem;
+      color: var(--ink-soft);
+      max-width: 560px;
+      line-height: 1.7;
+      margin-bottom: 3rem;
+    }
+
+    .dep-tree {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0;
+    }
+
+    .dep-row-nodes {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .dep-node {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.55rem 1.1rem;
+      font-family: var(--ff-body);
+      font-size: 0.85rem;
+      letter-spacing: 0.03em;
+      border: 1px solid;
+      border-radius: 3px;
+    }
+
+    .dep-node-gate {
+      background: rgba(201, 169, 110, 0.12);
+      border-color: var(--gold);
+      color: var(--ink);
+    }
+
+    .dep-node-dest {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: var(--cream);
+      font-size: 0.95rem;
+      padding: 0.75rem 1.4rem;
+    }
+
+    .dep-node-mid {
+      background: transparent;
+      border-color: var(--rule);
+      color: var(--ink-soft);
+    }
+
+    .dep-node-out {
+      background: rgba(201, 169, 110, 0.08);
+      border-color: rgba(201, 169, 110, 0.4);
+      color: var(--ink);
+      font-size: 0.95rem;
+      padding: 0.75rem 1.4rem;
+    }
+
+    .dep-node-phase2 {
+      background: transparent;
+      border-color: var(--rule);
+      color: var(--sand);
+      font-size: 0.95rem;
+      padding: 0.75rem 1.4rem;
+    }
+
+    .dep-connector-label {
+      font-family: var(--ff-body);
+      font-size: 0.8rem;
+      font-style: italic;
+      color: var(--sand);
+      margin-left: 0.5rem;
+    }
+
+    .dep-plus {
+      color: var(--sand);
+      font-size: 1rem;
+    }
+
+    .arrow-down {
+      display: flex;
+      align-items: center;
+      padding-left: 0.25rem;
+      color: var(--sand);
+      font-size: 1.1rem;
+      margin: 0.4rem 0;
+    }
+
+    /* ── LAYER WRAPPER ── */
+
+    .layer {
+      page-break-before: always;
+    }
+
+    .layer-header {
+      background: var(--ink);
+      color: var(--cream);
+      padding: 1.4rem clamp(2rem, 8vw, 6rem);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid rgba(243, 237, 225, 0.1);
+    }
+
+    .layer-title {
+      font-family: var(--ff-display);
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--cream);
+    }
+
+    .layer-badge {
+      font-family: var(--ff-body);
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--sand);
+      opacity: 0.7;
+      border: 1px solid rgba(243, 237, 225, 0.2);
+      padding: 0.25rem 0.75rem;
+    }
+
+    .layer-footer-bar {
+      height: 3px;
+      background: var(--gold);
+      opacity: 0.4;
+    }
+
+    /* ── DELIVERABLES BODY ── */
+
+    .deliverables-body {
+      padding: clamp(2.5rem, 6vw, 4rem) clamp(2rem, 8vw, 6rem);
+    }
+
+    .deliverable {
+      margin-bottom: 3.5rem;
+      page-break-inside: avoid;
+    }
+
+    .deliverable:last-child {
+      margin-bottom: 0;
+    }
+
+    .deliverable-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1.5rem;
+      margin-bottom: 0.85rem;
+      padding-bottom: 0.85rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .deliverable-name {
+      font-family: var(--ff-display);
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--ink);
+      line-height: 1.2;
+    }
+
+    .slide-ink .deliverable-name { color: var(--cream); }
+
+    .deliverable-badges {
+      display: flex;
+      gap: 0.4rem;
+      flex-shrink: 0;
+      margin-top: 0.2rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .badge {
+      font-family: var(--ff-body);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+      border: 1px solid;
+      white-space: nowrap;
+    }
+
+    .badge-gate     { border-color: var(--gold); color: var(--ink); background: rgba(201,169,110,0.12); }
+    .badge-one      { border-color: var(--rule);  color: var(--ink-soft); background: transparent; }
+    .badge-ongoing  { border-color: var(--ink);   color: var(--ink); background: transparent; }
+    .badge-asneeded { border-color: var(--rule);  color: var(--ink-soft); background: transparent; }
+
+    .deliverable-dep {
+      font-family: var(--ff-body);
+      font-size: 0.95rem;
+      font-style: italic;
+      color: var(--ink-soft);
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+
+    .deliverable-dep strong {
+      font-style: normal;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .slide-ink .deliverable-dep          { color: rgba(243,237,225,0.6); }
+    .slide-ink .deliverable-dep strong   { color: var(--cream); }
+    .slide-ink .deliverable-header       { border-bottom-color: rgba(243,237,225,0.15); }
+
+    .task-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.35rem 2.5rem;
+    }
+
+    .task-list.single-col {
+      grid-template-columns: 1fr;
+    }
+
+    .task-list li {
+      font-family: var(--ff-body);
+      font-size: 1rem;
+      color: var(--ink-soft);
+      display: flex;
+      align-items: baseline;
+      gap: 0.65rem;
+      line-height: 1.55;
+    }
+
+    .task-list li::before {
+      content: "—";
+      color: var(--gold);
+      flex-shrink: 0;
+      font-size: 0.85rem;
+    }
+
+    .slide-ink .task-list li            { color: rgba(243,237,225,0.65); }
+    .slide-ink .task-list li::before    { color: var(--gold); }
+
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--rule);
+      margin: 2.5rem 0;
+    }
+
+    /* ── SECTION (stand-alone, e.g. dep map) ── */
+
+    .section {
+      padding: clamp(3rem, 8vw, 5rem) clamp(2rem, 8vw, 6rem);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    /* ── PHASE 2 ── */
+
+    .phase2-section {
+      background: var(--sand);
+      padding: clamp(3rem, 8vw, 5rem) clamp(2rem, 8vw, 6rem);
+    }
+
+    .phase2-heading {
+      font-family: var(--ff-display);
+      font-size: clamp(1.6rem, 3vw, 2.5rem);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      color: var(--ink-soft);
+      margin-bottom: 0.5rem;
+    }
+
+    .phase2-lock {
+      font-family: var(--ff-body);
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      border: 1px solid var(--rule);
+      padding: 0.25rem 0.75rem;
+      display: inline-block;
+      margin-left: 1rem;
+      vertical-align: middle;
+      opacity: 0.6;
+    }
+
+    .phase2-unlock {
+      font-family: var(--ff-body);
+      font-size: 0.95rem;
+      font-style: italic;
+      color: var(--ink-soft);
+      margin-bottom: 2.5rem;
+      opacity: 0.75;
+    }
+
+    .phase2-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    .phase2-item {
+      padding: 1.5rem 1.75rem;
+      border: 1px solid var(--rule);
+      background: rgba(243, 237, 225, 0.4);
+      opacity: 0.65;
+    }
+
+    .phase2-item-title {
+      font-family: var(--ff-display);
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--ink);
+      margin-bottom: 0.5rem;
+    }
+
+    .phase2-item-desc {
+      font-family: var(--ff-body);
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+      line-height: 1.6;
+    }
+
+    /* ── WYNTK ── */
+
+    .wyntk-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      margin-top: 2rem;
+    }
+
+    .wyntk-body {
+      font-family: var(--ff-body);
+      font-size: 1rem;
+      color: var(--ink-soft);
+      line-height: 1.75;
+    }
+
+    .wyntk-body + .wyntk-body { margin-top: 1.25rem; }
+
+    .wyntk-body strong {
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    .wyntk-callout {
+      border-left: 4px solid var(--gold);
+      padding: 1.5rem 2rem;
+      background: rgba(201, 169, 110, 0.08);
+      margin-bottom: 2rem;
+    }
+
+    .checklist {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-top: 1rem;
+    }
+
+    .checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.85rem;
+      font-family: var(--ff-body);
+      font-size: 1rem;
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    .check-box {
+      width: 0.8rem;
+      height: 0.8rem;
+      border: 1px solid var(--gold);
+      flex-shrink: 0;
+      margin-top: 0.25rem;
+      display: inline-block;
+    }
+
+    /* ── TIMELINE ── */
+
+    .timeline-row {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 2.5rem;
+      padding: 1.5rem 0;
+      border-top: 1px solid var(--rule);
+    }
+
+    .timeline-week {
+      font-family: var(--ff-display);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      padding-top: 0.15rem;
+    }
+
+    .timeline-items {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .timeline-items li {
+      font-family: var(--ff-body);
+      font-size: 1rem;
+      color: var(--ink-soft);
+      display: flex;
+      align-items: baseline;
+      gap: 0.65rem;
+      line-height: 1.5;
+    }
+
+    .timeline-items li::before {
+      content: "—";
+      color: var(--gold);
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+
+    /* ── PRINT ── */
+
+    @page {
+      size: 11.5in 8in landscape;
+      margin: 0.5in;
+    }
+
+    @media print {
+      .layer-header { position: static; }
+      .layer, .cover { page-break-before: always; }
+      .deliverable { page-break-inside: avoid; }
+      .wyntk-grid, .timeline-row { page-break-inside: avoid; }
+    }
+
+    /* ── REDUCED MOTION ── */
+
+    @media (prefers-reduced-motion: reduce) {
+      .anim, .anim-scale {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+    }
+
+    /* ── RESPONSIVE ── */
+
+    @media (max-width: 680px) {
+      .cover-footer  { flex-direction: column; gap: 1.5rem; }
+      .task-list     { grid-template-columns: 1fr; }
+      .phase2-grid   { grid-template-columns: 1fr; }
+      .dep-row-nodes { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     COVER
+══════════════════════════════════════════ -->
+<section class="cover">
+  <div class="cover-top">
+    <span class="wordmark" style="color: var(--cream);">Kubern Co</span>
+    <div class="cover-divider"></div>
+    <div class="cover-unit">Regional One Health · L&amp;D · Memphis, TN</div>
+  </div>
+
+  <div class="cover-body">
+    <div class="cover-label">Marketing Playbook · Phase 1</div>
+    <div class="rule"></div>
+    <h1 class="cover-title">Reversing<br>the <em>Curve</em></h1>
+    <p class="cover-objective">
+      One goal: <strong>reverse the delivery decline.</strong><br>
+      This document is the complete system required to do it — every deliverable, every dependency, in sequence.
+      <br><br>
+      Nothing here is optional. Everything connects.
+    </p>
+  </div>
+
+  <div class="cover-footer">
+    <div class="cover-meta">
+      <strong>Prepared for</strong>
+      Regional One Health — Labor &amp; Delivery
+    </div>
+    <div class="cover-meta" style="text-align:center;">
+      <strong>Prepared by</strong>
+      J. Hudson Graves
+    </div>
+    <div class="cover-meta" style="text-align:right;">
+      <strong>Date</strong>
+      May 2026
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     WHAT YOU NEED TO KNOW
+══════════════════════════════════════════ -->
+<section class="slide-cream" style="padding: clamp(3rem, 6vw, 4rem) clamp(2rem, 8vw, 6rem);">
+  <div class="eyebrow">Before You Read Further</div>
+  <div class="rule"></div>
+  <h2 style="font-size: clamp(1.6rem, 3.5vw, 2.8rem); margin-bottom: 2rem;">What You Need to Know</h2>
+
+  <div class="wyntk-grid">
+
+    <div>
+      <p class="wyntk-body"><strong>On reversing the curve:</strong> Phase 1 target: +13 deliveries/month. The three-county market produces 1,238 deliveries/month. At a 50% prenatal-to-delivery conversion rate, +13 deliveries requires only 26 prenatal signups per month — a 2.1% capture rate from a market where no competitor is tracking and Regional One is currently invisible. The constraint is not the goal. It is that no data exists today to identify where those 26 women are being lost.</p>
+
+      <p class="wyntk-body" style="margin-top: 1.25rem;"><strong>This is a playbook, not a proposal.</strong> The deliverables inside are intentionally exhaustive — every line item is a required condition for the step above it to succeed. Built on the frameworks of Alex Hormozi — one of the most documented direct-response marketers working today, with an average lifetime customer LTV of 36:1 from his approach — this funnel stack outlines everything required to make this system succeed and drive one outcome: more deliveries at Regional One Health.</p>
+
+      <p class="wyntk-body" style="margin-top: 1.25rem;"><strong>Minimal oversight by design.</strong> This playbook is built to run with the marketer executing the full system. Leadership does not manage it. The goal is to keep your team focused on clinical operations while the marketing engine runs behind it — with clear reporting so you always know what's happening.</p>
+
+      <p class="wyntk-body" style="margin-top: 1.25rem;"><strong>On branding.</strong> The L&amp;D brand identity will remain consistent with Regional One Health while maintaining a distinct presence from the broader hospital. No significant change to the overall brand. OB/GYN maintains its own lane and affiliation — without disrupting the main hospital identity.</p>
+    </div>
+
+    <div>
+      <div class="wyntk-callout">
+        <div class="eyebrow" style="margin-bottom: 0.5rem;">Executive Touchpoints</div>
+        <p style="font-family: var(--ff-body); font-size: 0.9rem; color: var(--ink-soft); line-height: 1.6;">The only actions required from Randy Sites or Dr. Schorge.</p>
+        <ul class="checklist">
+          <li><span class="check-box"></span>Brand identity sign-off — one-time approval</li>
+          <li><span class="check-box"></span>HIPAA / legal framework review and approval</li>
+          <li><span class="check-box"></span>Facility and staff access for Week 1 site visit</li>
+          <li><span class="check-box"></span>CNM and staff availability for interviews</li>
+          <li><span class="check-box"></span>Google Business Profile verification</li>
+          <li><span class="check-box"></span>Appointment booking system access</li>
+          <li><span class="check-box"></span>Quarterly ad spend check-in</li>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     TIMELINE
+══════════════════════════════════════════ -->
+<section class="slide-deep" style="padding: clamp(3rem, 6vw, 4rem) clamp(2rem, 8vw, 6rem);">
+  <div class="eyebrow">Accountability</div>
+  <div class="rule"></div>
+  <h2 style="font-size: clamp(1.6rem, 3.5vw, 2.8rem); margin-bottom: 0.75rem;">Timeline</h2>
+  <p style="font-family: var(--ff-body); font-size: 0.95rem; font-style: italic; color: var(--ink-soft); margin-bottom: 2.5rem; max-width: 640px; line-height: 1.7;">This timeline is a commitment, not an estimate. Any adjustment will be communicated in advance with a reason. As testing data matures, optimization cadence evolves — that is expected and will be documented in each monthly report.</p>
+
+  <div class="timeline-row">
+    <div class="timeline-week">Week 1</div>
+    <ul class="timeline-items">
+      <li>Desk research — census data, Medicaid enrollment rates, zip code mapping</li>
+      <li>Competitor visual audit — Baptist Beautiful Beginnings, CHOICES Birth Center</li>
+      <li>Interview guides drafted — CNMs, OB nurses, front desk, admin</li>
+      <li>In-person site visit itinerary prepared</li>
+      <li>HIPAA / consent framework research initiated</li>
+      <li>Counter-narrative desk research — brand search audit, top 5 negative narratives identified</li>
+      <li>Article countering the 3.8 million malpractice verdict delivered</li>
+    </ul>
+  </div>
+
+  <div class="timeline-row">
+    <div class="timeline-week">Weeks 2–4</div>
+    <ul class="timeline-items">
+      <li>In-person site visit — branding and avatar research</li>
+      <li>Stakeholder alignment meeting</li>
+      <li>CNM and staff interviews</li>
+      <li>Facility tour and photography location scouting</li>
+      <li>HIPAA framework finalized and approved</li>
+      <li>Avatar research synthesized — working avatar document complete</li>
+      <li>Brand identity finalized and approved</li>
+      <li>Conversion tracking live and verified</li>
+      <li>Microsite development underway</li>
+      <li>Google Business Profile created and verified</li>
+      <li>Counter-narrative content in production</li>
+    </ul>
+  </div>
+
+  <div class="timeline-row">
+    <div class="timeline-week">Weeks 5–8</div>
+    <ul class="timeline-items">
+      <li>Microsite live</li>
+      <li>Funnel built, tested, and tracking verified</li>
+      <li>Counter-narrative content published and indexed</li>
+      <li>Meta and Google campaigns launched</li>
+      <li>SMS nurture sequence active</li>
+      <li>Content calendar in full production</li>
+    </ul>
+  </div>
+
+  <div class="timeline-row">
+    <div class="timeline-week">Weeks 9–12</div>
+    <ul class="timeline-items">
+      <li>Full system running across all eight layers</li>
+      <li>30-day data baseline collecting</li>
+      <li>Monthly reporting cycle begins</li>
+      <li>A/B testing underway across ads, funnel, and nurture</li>
+      <li>Phase 2 readiness assessed at Week 12</li>
+    </ul>
+  </div>
+
+  <div class="timeline-row" style="border-bottom: 1px solid var(--rule); padding-bottom: 1.5rem;">
+    <div class="timeline-week">Week 13+</div>
+    <p style="font-family: var(--ff-body); font-size: 1rem; font-style: italic; color: var(--ink-soft); line-height: 1.7;">Ongoing optimization. The system runs, data informs decisions, and the funnel improves continuously.</p>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     DEPENDENCY MAP
+══════════════════════════════════════════ -->
+<section class="dep-section slide-cream">
+  <div class="eyebrow">System Overview</div>
+  <div class="rule"></div>
+  <h2 style="font-size: clamp(1.6rem, 3.5vw, 3rem); margin-bottom: 1.5rem;">Dependency Map</h2>
+  <p>
+    Every deliverable in this system has a dependency. <strong style="color: var(--ink); font-weight:500;">Gate items</strong> must be complete before anything downstream can begin. The sequence is not arbitrary — it is the critical path.
+  </p>
+
+  <div class="dep-tree">
+
+    <!-- Gates -->
+    <div class="dep-row-nodes">
+      <span class="dep-node dep-node-gate">HIPAA / Consent Framework</span>
+      <span class="dep-node dep-node-gate">Avatar Research</span>
+      <span class="dep-node dep-node-gate">Brand Identity</span>
+      <span class="dep-node dep-node-gate">Conversion Tracking</span>
+    </div>
+
+    <div class="arrow-down">↓</div>
+
+    <div class="dep-row-nodes">
+      <span class="dep-node dep-node-dest">Microsite Build + Appointment Booking + Link-in-Bio</span>
+    </div>
+
+    <div class="arrow-down">↓</div>
+
+    <div class="dep-row-nodes">
+      <span class="dep-node dep-node-mid">Counter-Narrative Content</span>
+      <span class="dep-plus">+</span>
+      <span class="dep-node dep-node-mid">Separate GBP for L&amp;D</span>
+      <span class="dep-plus">+</span>
+      <span class="dep-node dep-node-mid">Review Generation Strategy</span>
+    </div>
+
+    <div class="arrow-down">↓ <span class="dep-connector-label">counter-narrative must be live before ad spend</span></div>
+
+    <div class="dep-row-nodes">
+      <span class="dep-node dep-node-dest">Funnel Build — SMS Nurture — Newsletter</span>
+    </div>
+
+    <div class="arrow-down">↓</div>
+
+    <div class="dep-row-nodes">
+      <span class="dep-node dep-node-mid">Meta Ad Account + Campaigns</span>
+      <span class="dep-plus">+</span>
+      <span class="dep-node dep-node-mid">Google Search Campaigns</span>
+      <span class="dep-plus">+</span>
+      <span class="dep-node dep-node-mid">SEO Foundation</span>
+    </div>
+
+    <div class="arrow-down">↓</div>
+
+    <div class="dep-row-nodes">
+      <span class="dep-node dep-node-out">Content — Photography · Video · Social · Ad Creative</span>
+    </div>
+
+    <div class="arrow-down">↓</div>
+
+    <div class="dep-row-nodes">
+      <span class="dep-node dep-node-mid">Monthly Conversion Reporting</span>
+    </div>
+
+    <div class="arrow-down">↓</div>
+
+    <div class="dep-row-nodes">
+      <span class="dep-node dep-node-phase2">Phase 2 Unlocks — Referral · Growth Package · YouTube · Podcast</span>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     LAYER 1 — FOUNDATION
+══════════════════════════════════════════ -->
+<div class="layer">
+  <div class="layer-header">
+    <div class="layer-title">01 — Foundation Layer</div>
+    <div class="layer-badge">One-Time · Gates Everything</div>
+  </div>
+  <div class="layer-footer-bar"></div>
+
+  <div class="deliverables-body slide-cream">
+
+    <div class="deliverable">
+      <div class="deliverable-header">
+        <div class="deliverable-name">HIPAA / Consent Framework</div>
+        <div class="deliverable-badges">
+          <span class="badge badge-gate">Gate</span>
+          <span class="badge badge-one">One-Time</span>
+        </div>
+      </div>
+      <p class="deliverable-dep"><strong>Blocks:</strong> All content production, photography, video, patient testimonials, social media.</p>
+      <ul class="task-list">
+        <li>Research applicable HIPAA marketing rules for healthcare</li>
+        <li>Draft patient photo and video release form</li>
+        <li>Draft testimonial consent form</li>
+        <li>Design consent collection workflow for staff</li>
+        <li>Build pre-publication content review checklist</li>
+        <li>Establish approval chain for patient-facing materials</li>
+      </ul>
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="deliverable">
+      <div class="deliverable-header">
+        <div class="deliverable-name">Avatar Research</div>
+        <div class="deliverable-badges">
+          <span class="badge badge-gate">Gate</span>
+          <span class="badge badge-one">One-Time</span>
+        </div>
+      </div>
+      <p class="deliverable-dep"><strong>Blocks:</strong> All creative work — ad copy, VSL script, quiz questions, social content, counter-narrative framing.</p>
+      <ul class="task-list">
+        <li>Pre-visit desk research (census data, Medicaid enrollment rates, zip code mapping)</li>
+        <li>Stakeholder interview guide — CNMs, OB nurses, front desk, admin</li>
+        <li>Patient intercept interview design</li>
+        <li>Site visit execution</li>
+        <li>Focus group recruitment</li>
+        <li>Focus group facilitation</li>
+        <li>Synthesis and analysis of all qualitative data</li>
+        <li>Working avatar document — demographics, fears, motivations, objections, language</li>
+        <li>Identify decision moment: when does patient choose delivery hospital?</li>
+        <li>Map referral sources currently sending patients to ROH</li>
+      </ul>
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="deliverable">
+      <div class="deliverable-header">
+        <div class="deliverable-name">Brand Identity — ROH L&amp;D</div>
+        <div class="deliverable-badges">
+          <span class="badge badge-gate">Gate</span>
+          <span class="badge badge-one">One-Time</span>
+        </div>
+      </div>
+      <p class="deliverable-dep"><strong>Blocks:</strong> Microsite, ad creative, social media templates, photography art direction. <strong>Separate</strong> from main hospital brand.</p>
+      <ul class="task-list">
+        <li>Competitive visual audit — Baptist Beautiful Beginnings, CHOICES Birth Center</li>
+        <li>Avatar-informed mood board</li>
+        <li>Color palette selection</li>
+        <li>Typography selection</li>
+        <li>Wordmark and logo (distinct from main ROH hospital identity)</li>
+        <li>Photography art direction guidelines</li>
+        <li>Social media post templates — Instagram feed, Reels cover, Stories</li>
+        <li>Ad creative templates — static, carousel, video thumbnail</li>
+        <li>Brand voice and tone guide</li>
+        <li>Brand usage rules — what the main hospital brand cannot contaminate</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     LAYER 2 — TRACKING
+══════════════════════════════════════════ -->
+<div class="layer">
+  <div class="layer-header">
+    <div class="layer-title">02 — Tracking Layer</div>
+    <div class="layer-badge">One-Time Setup · Gate for Measurement</div>
+  </div>
+  <div class="layer-footer-bar"></div>
+
+  <div class="deliverables-body slide-deep">
+
+    <div class="deliverable">
+      <div class="deliverable-header">
+        <div class="deliverable-name">Conversion Tracking Setup</div>
+        <div class="deliverable-badges">
+          <span class="badge badge-gate">Gate</span>
+          <span class="badge badge-one">One-Time</span>
+        </div>
+      </div>
+      <p class="deliverable-dep"><strong>Blocks:</strong> Knowing whether anything works. No tracking = no optimization = no Phase 2.</p>
+      <ul class="task-list">
+        <li>GA4 property setup and configuration</li>
+        <li>Meta Pixel installation and verification</li>
+        <li>UTM parameter system design — consistent naming convention across all channels</li>
+        <li>Call tracking number setup (CallRail or equivalent)</li>
+        <li>Event tracking — quiz starts, quiz completions, SMS captures, form submissions, appointment bookings</li>
+        <li>Funnel drop-off tracking at each stage</li>
+        <li>Looker Studio reporting dashboard build</li>
+        <li>30-day baseline data collection period before optimization begins</li>
+        <li>Attribution model selection and documentation</li>
+        <li>Monthly data integrity audit process</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     LAYER 3 — DESTINATION
+══════════════════════════════════════════ -->
+<div class="layer">
+  <div class="layer-header">
+    <div class="layer-title">03 — Destination Layer</div>
+    <div class="layer-badge">Ongoing — Build then Optimize</div>
+  </div>
+  <div class="layer-footer-bar"></div>
+
+  <div class="deliverables-body slide-cream">
+
+    <div class="deliverable">
+      <div class="deliverable-header">
+        <div class="deliverable-name">Microsite Build + Optimization</div>
+        <div class="deliverable-badges">
+          <span class="badge badge-ongoing">Ongoing</span>
+        </div>
+      </div>
+      <p class="deliverable-dep"><strong>Depends on:</strong> Brand Identity, Conversion Tracking. <strong>Meta-optimized first, Google second.</strong> Built as proof of concept, transferred to client ownership.</p>
+      <ul class="task-list">
+        <li>Domain acquisition — dedicated L&amp;D domain separate from hospital</li>
+        <li>Hosting setup</li>
+        <li>Mobile-first wireframe design</li>
+        <li>Video Sales Letter (VSL) embed — 60–90s CNM-on-camera video</li>
+        <li>Quiz funnel integration — 5–7 question interactive lead magnet</li>
+        <li>Quiz result pages — 3–4 personalized outcomes</li>
+        <li>SMS capture form (primary) and email capture (secondary)</li>
+        <li>Appointment booking integration</li>
+        <li>Page speed optimization — target 85+ mobile PageSpeed score</li>
+        <li>Schema markup for AI-augmented search</li>
+        <li>GA4 and Meta Pixel integration and verification</li>
+        <li>Mobile QA and cross-browser testing</li>
+        <li>Copy — headline, subheads, CNM differentiator section, social proof</li>
+        <li>Photography and video content population</li>
+        <li>Ongoing CRO based on funnel drop-off data</li>
+        <li>A/B testing of hero, CTA copy, lead magnet offer</li>
+      </ul>
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="deliverable">
+      <div class="deliverable-header">
+        <div class="deliverable-name">Appointment Booking Flow</div>
+        <div class="deliverable-badges">
+          <span class="badge badge-one">One-Time Setup</span>
+          <span class="badge badge-ongoing">Ongoing Optimization</span>
+        </div>
+      </div>
+      <p class="deliverable-dep"><strong>Depends on:</strong> Microsite. <strong>Circumvents the call center entirely.</strong> Built from scratch — no existing scheduling tool assumed.</p>
+      <ul class="task-list">
+        <li>Shadow and document current call center intake process</li>
+        <li>Map patient journey from first inquiry to first appointment</li>
+        <li>Identify and quantify drop-off points in current process</li>
+        <li>Design new direct booking flow wireframe</li>
+        <li>Spec form fields — minimum required, maximum friction</li>
+        <li>SMS confirmation sequence — immediate confirmation + 24hr reminder + day-of reminder</li>
+        <li>No-show follow-up sequence</li>
+        <li>Calendar integration and scheduling logic</li>
+        <li>Handoff protocol — who receives the booking inside ROH</li>
+      </ul>
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="deliverable">
+      <div class="deliverable-header">
+        <div class="deliverable-name">Link-in-Bio Setup</div>
+        <div class="deliverable-badges">
+          <span class="badge badge-one">One-Time Setup</span>
+        </div>
+      </div>
+      <p class="deliverable-dep"><strong>Depends on:</strong> Microsite live. Primary traffic bridge from Instagram to all destinations.</p>
+      <ul class="task-list single-col">
+        <li>Platform selection — Linktree or custom built on microsite</li>
+        <li>CTA hierarchy — appointment booking above the fold</li>
+        <li>Tracking UTM links for each destination</li>
+        <li>Mobile optimization and load speed check</li>
+        <li>Monthly CTA hierarchy review based on click data</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     LAYER 4 — TRUST
+══════════════════════════════════════════ -->
+<div class="layer">
+  <div class="layer-header">
+    <div class="layer-title">04 — Trust Layer</div>
+    <div class="layer-badge">One-Time Setup · Ongoing Monitoring</div>
+  </div>
+  <div class="layer-footer-bar"></div>
+
+  <div class="deliverables-body slide-deep">
+
+    <div class="deliverable">
+      <div class="deliverable-header">
+        <div class="deliverable-name">Separate Google Business Profile — L&amp;D</div>
+        <div class="deliverable-badges">
+          <span class="badge badge-one">One-Time</span>
+        </div>
+      </div>
+      <p class="deliverable-dep"><strong>Depends on:</strong> Brand Identity. Insulated from the main hospital's 1-star rating. Own review ecosystem from day one.</p>
+      <ul class="task-list">
+        <li>Verify eligibility for a separate L&amp;D listing</li>
+        <li>Create and verify GBP profile</li>
+        <li>Write keyword-optimized business description — CNM differentiator prominent</li>
+        <li>Initial photo set upload — facility, staff, CNMs</li>
+        <li>Service categories — maternity, midwifery, labor and delivery</li>
+        <li>Booking link integration</li>
+        <li>Q&amp;A seeding — pre-answer the 10 most common patient questions</li>
+        <li>Hours, contact, and address verified</li>
+      </ul>
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="deliverable">
+      <div class="deliverable-header">
+        <div class="deliverable-name">Review Generation Strategy</div>
+        <div class="deliverable-badges">
+          <span class="badge badge-one">One-Time Setup</span>
+          <span class="badge badge-ongoing">Ongoing</span>
+        </div>
+      </div>
+      <p class="deliverable-dep"><strong>Depends on:</strong> GBP live, HIPAA framework. An empty GBP is nearly as damaging as no GBP.</p>
+      <ul class="task-list">
+        <li>Post-delivery SMS review request — timing and copy</li>
+        <li>Staff briefing — how and when to ask for reviews</li>
+        <li>Review response templates — positive, neutral, negative</li>
+        <li>Escalation protocol for negative reviews</li>
+        <li>Monthly review volume and rating tracking</li>
+        <li>Quarterly review audit — identify patterns and respond to themes</li>
+      </ul>
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="deliverable">
+      <div class="deliverable-header">
+        <div class="deliverable-name">Counter-Narrative Content</div>
+        <div class="deliverable-badges">
+          <span class="badge badge-gate">Gate — Must Be Live Before Ad Spend</span>
+          <span class="badge badge-asneeded">As-Needed</span>
+        </div>
+      </div>
+      <p class="deliverable-dep"><strong>Blocks ad spend.</strong> Every paid click sends someone to Google. Without counter-narrative content, the first result is the malpractice verdict.</p>
+      <ul class="task-list">
+        <li>Audit current search results for all brand terms</li>
+        <li>Identify top 5 active negative narratives — malpractice, "The Med" stigma, safety perception</li>
+        <li>Develop counter-narrative strategy for each — not defensive, identity-building</li>
+        <li>Write 3–5 SEO-optimized counter-narrative articles</li>
+        <li>Publish, index, and verify ranking before any paid traffic launches</li>
+        <li>Build CNM identity narrative — separate mental category from "The Med"</li>
+        <li>Ongoing monitoring — alert on new negative coverage</li>
+        <li>Response pieces as new narratives emerge</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     LAYER 5 — FUNNEL
+══════════════════════════════════════════ -->
+<div class="layer">
+  <div class="layer-header">
+    <div class="layer-title">05 — Funnel Layer</div>
+    <div class="layer-badge">Ongoing — Core System</div>
+  </div>
+  <div class="layer-footer-bar"></div>
+
+  <div class="deliverables-body slide-cream">
+
+    <div class="deliverable">
+      <div class="deliverable-header">
+        <div class="deliverable-name">Funnel Build + Optimization</div>
+        <div class="deliverable-badges">
+          <span class="badge badge-ongoing">Ongoing</span>
+        </div>
+      </div>
+      <p class="deliverable-dep"><strong>Depends on:</strong> Microsite live, Conversion Tracking live, HIPAA Framework complete. Comment-to-DM → nurture page → SMS capture → appointment.</p>
+      <ul class="task-list">
+        <li>Automation platform setup — ManyChat or equivalent</li>
+        <li>Comment trigger configuration on Meta ads</li>
+        <li>DM message sequence copywriting — first reply, follow-up, link delivery</li>
+        <li>Link routing from DM to nurture page on microsite</li>
+        <li>Quiz question design — 5–7 questions, avatar-informed</li>
+        <li>Quiz result pages — 3–4 personalized outcomes with embedded CTA</li>
+        <li>SMS capture integration — primary lead identifier</li>
+        <li>Welcome SMS sequence — 3–5 messages post-capture</li>
+        <li>Email backup sequence for captured emails</li>
+        <li>Nurture drip — 7–10 touch sequence, value-first, CTA at each step</li>
+        <li>A/B test framework — quiz entry copy, DM opener, nurture message variants</li>
+        <li>Conversion event verification — every step fires correctly in GA4 and Meta</li>
+        <li>Weekly drop-off analysis — where are we losing people?</li>
+        <li>Monthly optimization — rewrite or replace underperforming steps</li>
+      </ul>
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="deliverable">
+      <div class="deliverable-header">
+        <div class="deliverable-name">SMS Nurture Sequence</div>
+        <div class="deliverable-badges">
+          <span class="badge badge-ongoing">Ongoing</span>
+        </div>
+      </div>
+      <p class="deliverable-dep"><strong>Depends on:</strong> Funnel Build live, HIPAA Framework complete. Primary nurture channel — supersedes email for this demographic.</p>
+      <ul class="task-list">
+        <li>Sequence architecture — number of touches, intervals, trigger conditions</li>
+        <li>Message copywriting for each touch — value, story, CTA</li>
+        <li>Personalization variables — name, quiz result outcome</li>
+        <li>Opt-out compliance and language</li>
+        <li>Delivery rate and open rate monitoring setup</li>
+        <li>Re-engagement sequence for cold leads</li>
+        <li>Monthly copy refresh based on performance data</li>
+      </ul>
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="deliverable">
+      <div class="deliverable-header">
+        <div class="deliverable-name">Newsletter Setup + Ongoing Sends</div>
+        <div class="deliverable-badges">
+          <span class="badge badge-one">One-Time Setup</span>
+          <span class="badge badge-ongoing">Ongoing</span>
+        </div>
+      </div>
+      <p class="deliverable-dep"><strong>Depends on:</strong> Conversion Tracking, HIPAA Framework. Prospective patients only — nurture drip for leads not yet booked.</p>
+      <ul class="task-list">
+        <li>Platform selection and setup</li>
+        <li>List segmentation structure — by quiz outcome, lead source, stage</li>
+        <li>Welcome sequence — 3 emails, value-first, no hard sell</li>
+        <li>Ongoing drip architecture — educational, CNM spotlights, birth stories</li>
+        <li>Unsubscribe and compliance setup</li>
+        <li>Monthly send — content calendar aligned with social and ads</li>
+        <li>Monthly open rate, click rate, and conversion tracking</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     LAYER 6 — TRAFFIC
+══════════════════════════════════════════ -->
+<div class="layer">
+  <div class="layer-header">
+    <div class="layer-title">06 — Traffic Layer</div>
+    <div class="layer-badge">One-Time Setup · Ongoing Management</div>
+  </div>
+  <div class="layer-footer-bar"></div>
+
+  <div class="deliverables-body slide-deep">
+
+    <div class="deliverable">
+      <div class="deliverable-header">
+        <div class="deliverable-name">Meta Ad Account Setup</div>
+        <div class="deliverable-badges">
+          <span class="badge badge-one">One-Time</span>
+        </div>
+      </div>
+      <p class="deliverable-dep"><strong>Depends on:</strong> Brand Identity, Funnel live, Counter-narrative live. Dedicated ROH L&amp;D account — separate from the main hospital account.</p>
+      <ul class="task-list">
+        <li>Business Manager setup</li>
+        <li>Dedicated ad account creation — ROH OBGYN / L&amp;D only</li>
+        <li>Facebook and Instagram page audit and optimization</li>
+        <li>Meta Pixel verification and event confirmation</li>
+        <li>Custom audience creation — geographic targeting, interest-based</li>
+        <li>Lookalike audience setup from engaged users</li>
+        <li>Campaign structure design — awareness, consideration, conversion layers</li>
+        <li>Initial creative brief aligned to avatar</li>
+        <li>Comment-to-DM campaign architecture</li>
+      </ul>
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="deliverable">
+      <div class="deliverable-header">
+        <div class="deliverable-name">Meta Ad Campaigns — Management</div>
+        <div class="deliverable-badges">
+          <span class="badge badge-ongoing">Ongoing</span>
+        </div>
+      </div>
+      <p class="deliverable-dep"><strong>Ad spend is separate from retainer.</strong> Minimum $2,000/month recommended. Higher spend pulls the timeline forward — faster A/B data, faster optimization.</p>
+      <ul class="task-list">
+        <li>Comment-to-DM campaign launch and monitoring</li>
+        <li>Geo-targeted awareness campaign — Shelby County, West Memphis, East Arkansas feeder market</li>
+        <li>Methodist South service area targeting — displacement window still open</li>
+        <li>A/B testing — creative variants, copy, audience segments, offer</li>
+        <li>Weekly performance review and bid adjustments</li>
+        <li>Monthly creative refresh — winning variants scaled, losers cut</li>
+        <li>Monthly budget reallocation based on cost-per-booking data</li>
+        <li>Retargeting campaigns — nurture page visitors who did not convert</li>
+      </ul>
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="deliverable">
+      <div class="deliverable-header">
+        <div class="deliverable-name">Google Search Campaign Setup</div>
+        <div class="deliverable-badges">
+          <span class="badge badge-one">One-Time</span>
+        </div>
+      </div>
+      <p class="deliverable-dep"><strong>Depends on:</strong> Microsite live, Conversion Tracking live. Zero competitors currently bidding on Memphis maternity keywords — temporary arbitrage.</p>
+      <ul class="task-list">
+        <li>Keyword research — maternity, CNM, natural birth, midwife, Memphis delivery, labor and delivery near me</li>
+        <li>Negative keyword list — filter out irrelevant traffic</li>
+        <li>Campaign structure — brand, non-brand, competitor, condition-specific</li>
+        <li>Ad copy — 3–5 responsive search ad variants per ad group</li>
+        <li>Bid strategy setup and conversion goal configuration</li>
+        <li>Ad extensions — location, call, sitelink, structured snippets</li>
+      </ul>
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="deliverable">
+      <div class="deliverable-header">
+        <div class="deliverable-name">Google Search Management</div>
+        <div class="deliverable-badges">
+          <span class="badge badge-ongoing">Ongoing</span>
+        </div>
+      </div>
+      <ul class="task-list single-col">
+        <li>Weekly bid adjustments and search term report review</li>
+        <li>A/B testing ad copy — headline and description variants</li>
+        <li>Negative keyword expansion from search term data</li>
+        <li>Monthly performance report and budget reallocation</li>
+      </ul>
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="deliverable">
+      <div class="deliverable-header">
+        <div class="deliverable-name">SEO Foundation</div>
+        <div class="deliverable-badges">
+          <span class="badge badge-one">One-Time Setup</span>
+          <span class="badge badge-ongoing">Ongoing Updates</span>
+        </div>
+      </div>
+      <p class="deliverable-dep"><strong>Depends on:</strong> Microsite live, Counter-narrative content live. Optimized for AI-augmented search — AI Overviews, Perplexity, ChatGPT results — not just traditional blue links.</p>
+      <ul class="task-list">
+        <li>Keyword map — AI-augmented and traditional search</li>
+        <li>On-page optimization — title tags, meta descriptions, headers, alt text</li>
+        <li>FAQ schema markup — surface in AI Overviews</li>
+        <li>Internal linking structure</li>
+        <li>Initial AI-search-optimized content calendar — authoritative CNM content</li>
+        <li>Ranking tracking — target keywords and AI Overview appearances</li>
+        <li>Monthly content additions aligned with avatar questions and search intent</li>
+        <li>Ongoing AI Overview monitoring and optimization</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     LAYER 7 — CONTENT
+══════════════════════════════════════════ -->
+<div class="layer">
+  <div class="layer-header">
+    <div class="layer-title">07 — Content Layer</div>
+    <div class="layer-badge">Ongoing</div>
+  </div>
+  <div class="layer-footer-bar"></div>
+
+  <div class="deliverables-body slide-cream">
+
+    <div class="deliverable">
+      <div class="deliverable-header">
+        <div class="deliverable-name">Photography + Video Production</div>
+        <div class="deliverable-badges">
+          <span class="badge badge-ongoing">Ongoing</span>
+        </div>
+      </div>
+      <p class="deliverable-dep"><strong>Depends on:</strong> HIPAA Framework, Avatar Research, Brand Identity. All patient-facing content must clear the consent and HIPAA framework before production.</p>
+      <ul class="task-list">
+        <li>Shot list development — avatar-informed, brand-directed</li>
+        <li>CNM interview shoot — VSL (60–90s) and social clip variations</li>
+        <li>Facility walkthrough video — L&amp;D rooms, equipment, environment</li>
+        <li>Staff spotlight shoots — CNMs, OB nurses, support staff</li>
+        <li>Patient birth story shoots — consent-gated, HIPAA compliant</li>
+        <li>Content library organization and tagging system</li>
+        <li>Quarterly shoot refresh — new faces, new stories, seasonal content</li>
+      </ul>
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="deliverable">
+      <div class="deliverable-header">
+        <div class="deliverable-name">Social Media Content — Instagram (Primary)</div>
+        <div class="deliverable-badges">
+          <span class="badge badge-ongoing">Ongoing</span>
+        </div>
+      </div>
+      <p class="deliverable-dep"><strong>Primary traffic channel.</strong> Optimized for comment-to-DM funnel entry. All content serves the funnel — every post has a purpose.</p>
+      <ul class="task-list">
+        <li>Instagram profile optimization — bio, link, highlights, cover images</li>
+        <li>30-day rolling content calendar</li>
+        <li>Reels production — talking heads, CNM interviews, facility tours</li>
+        <li>Educational carousel content — natural birth, CNM explainers, myth-busting</li>
+        <li>Lives scheduling — CNM Q&amp;As, birth story conversations</li>
+        <li>Lives repurposing — clip, caption, schedule as Reels and feed posts</li>
+        <li>Engagement monitoring and comment response</li>
+        <li>Monthly performance review — reach, saves, DM entries, link clicks</li>
+      </ul>
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="deliverable">
+      <div class="deliverable-header">
+        <div class="deliverable-name">Social Media Content — TikTok (Secondary)</div>
+        <div class="deliverable-badges">
+          <span class="badge badge-ongoing">Ongoing</span>
+        </div>
+      </div>
+      <ul class="task-list single-col">
+        <li>TikTok profile setup and optimization</li>
+        <li>30-day content calendar — repurposed from Instagram with platform-native edits</li>
+        <li>Platform-specific native content where Instagram repurpose underperforms</li>
+        <li>Monthly performance review and posting cadence adjustment</li>
+      </ul>
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="deliverable">
+      <div class="deliverable-header">
+        <div class="deliverable-name">Ad Creative Production</div>
+        <div class="deliverable-badges">
+          <span class="badge badge-ongoing">Ongoing</span>
+        </div>
+      </div>
+      <p class="deliverable-dep"><strong>Depends on:</strong> Avatar Research, Brand Identity, Content library. Creative is replaced monthly — only winning variants survive.</p>
+      <ul class="task-list">
+        <li>Static ad design — feed and story formats</li>
+        <li>Video ad editing — cuts from VSL and content shoots</li>
+        <li>Copy variants per audience segment — avatar language, not hospital language</li>
+        <li>Seasonal and topical creative updates</li>
+        <li>Winning variant scaling — spend follows what converts</li>
+        <li>Monthly creative audit — kill underperformers, brief replacements</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     LAYER 8 — REPORTING
+══════════════════════════════════════════ -->
+<div class="layer">
+  <div class="layer-header">
+    <div class="layer-title">08 — Reporting Layer</div>
+    <div class="layer-badge">Ongoing — Monthly</div>
+  </div>
+  <div class="layer-footer-bar"></div>
+
+  <div class="deliverables-body slide-deep">
+
+    <div class="deliverable">
+      <div class="deliverable-header">
+        <div class="deliverable-name">Monthly Conversion Report</div>
+        <div class="deliverable-badges">
+          <span class="badge badge-ongoing">Ongoing</span>
+        </div>
+      </div>
+      <p class="deliverable-dep">The report does not just describe what happened. It answers: where are we losing people, and what changes in the next 30 days.</p>
+      <ul class="task-list">
+        <li>Full funnel performance — impressions through to appointments and deliveries</li>
+        <li>Ad spend vs. attributed bookings and estimated deliveries</li>
+        <li>Cost per lead, cost per booking, cost per delivery (as data matures)</li>
+        <li>GBP review count and average rating growth</li>
+        <li>SEO ranking movement on target keywords</li>
+        <li>AI Overview appearance tracking</li>
+        <li>SMS nurture sequence open and conversion rates</li>
+        <li>Newsletter performance — opens, clicks, downstream conversions</li>
+        <li>Top drop-off point identification</li>
+        <li>Optimization recommendations memo — specific, prioritized actions for next 30 days</li>
+        <li>Phase 2 readiness checkpoint — is 30-day baseline complete? Are conversion rates stable?</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     PHASE 2
+══════════════════════════════════════════ -->
+<section class="phase2-section">
+  <div class="eyebrow" style="color: var(--ink-soft);">What Scaling Looks Like</div>
+  <div class="rule"></div>
+  <div style="display:flex; align-items:baseline; gap:0.75rem; margin-bottom:0.75rem; flex-wrap:wrap;">
+    <h2 class="phase2-heading">Phase 2</h2>
+    <span class="phase2-lock">Locked</span>
+  </div>
+  <p class="phase2-unlock">Unlocks after 30 days of stable tracked funnel data and confirmed conversion rates at each stage.</p>
+
+  <div class="phase2-grid">
+
+    <div class="phase2-item">
+      <div class="phase2-item-title">Referral + Affiliate Program</div>
+      <div class="phase2-item-desc">Structured incentive system for OB referrals, doulas, and community health workers. Requires funnel tracking to measure attributed deliveries.</div>
+    </div>
+
+    <div class="phase2-item">
+      <div class="phase2-item-title">Growth Package</div>
+      <div class="phase2-item-desc">Scaling beyond +13/month. Requires additional resources — budget, staff, infrastructure. Assessed after Phase 1 baseline is proven.</div>
+    </div>
+
+    <div class="phase2-item">
+      <div class="phase2-item-title">Display + YouTube Ads</div>
+      <div class="phase2-item-desc">Brand-building layer. Runs on top of a profitable search and Meta foundation. Requires CNM video assets and larger ad budget.</div>
+    </div>
+
+    <div class="phase2-item">
+      <div class="phase2-item-title">Local Content Creator</div>
+      <div class="phase2-item-desc">Embedded recurring production after proof of concept is established. Scales content output without scaling time.</div>
+    </div>
+
+    <div class="phase2-item">
+      <div class="phase2-item-title">Patient Retention Newsletter</div>
+      <div class="phase2-item-desc">Past patient loyalty, repeat pregnancies, and word-of-mouth activation. Separate list and strategy from prospective patient nurture.</div>
+    </div>
+
+    <div class="phase2-item">
+      <div class="phase2-item-title">Podcast + Long-Form Content</div>
+      <div class="phase2-item-desc">Authority-building content — CNM interviews, birth expert conversations. Higher production value, compounding SEO and social equity.</div>
+    </div>
+
+  </div>
+
+  <div class="footer-bar" style="margin-top: 4rem;"></div>
+</section>
+
+</body>
+</html>
