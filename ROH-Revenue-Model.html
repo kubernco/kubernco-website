@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1200">
+<title>Revenue Model — Regional One Health · Kubern Co</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Upright:wght@300;400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --ink:        #1d3e49;
+  --ink-soft:   #34525c;
+  --cream:      #f3ede1;
+  --cream-deep: #e8dfcc;
+  --sand:       #d9cdb3;
+  --sky:        #2c5d70;
+  --rule:       rgba(29,62,73,0.25);
+  --gold:       #c9a96e;
+  --green:      #3d6b47;
+  --ff-display: "Playfair Display","Cormorant Garamond",Georgia,serif;
+  --ff-body:    "EB Garamond",Georgia,"Times New Roman",serif;
+  --ff-word:    "Cormorant Upright",Georgia,serif;
+  --radius:     20px;
+  --shadow:     0 18px 50px -20px rgba(0,0,0,0.45);
+  --hdr:        64px;
+  --strip:      90px;
+}
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+body {
+  background: var(--cream-deep);
+  font-family: var(--ff-body);
+  color: var(--ink);
+  min-width: 1100px;
+}
+
+/* ── HEADER ── */
+header {
+  position: sticky; top: 0; z-index: 100;
+  height: var(--hdr);
+  background: var(--ink);
+  border-bottom: 3px solid rgba(201,169,110,0.45);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2.5rem;
+}
+.wordmark {
+  font-family: var(--ff-word); font-size: 0.88rem; font-weight: 700;
+  letter-spacing: 0.02em; padding: 0.35rem 1rem;
+  border: 1px solid rgba(243,237,225,0.35); color: var(--cream); opacity: 0.65;
+}
+.hdr-left { display: flex; flex-direction: column; justify-content: center; gap: 5px; }
+.hdr-center { text-align: center; }
+.hdr-title {
+  font-family: var(--ff-display); font-size: 1.15rem;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--sand);
+}
+.hdr-client { font-size: 0.68rem; color: var(--sand); opacity: 0.5; }
+
+/* ── METRIC STRIP ── */
+.metric-strip {
+  position: sticky; top: var(--hdr); z-index: 90;
+  height: var(--strip);
+  background: var(--cream);
+  border-bottom: 1px solid var(--rule);
+  display: grid; grid-template-columns: 1fr 1fr 1fr 1.6fr;
+}
+.kpi {
+  padding: 0.8rem 1.4rem;
+  border-right: 1px solid var(--rule);
+  display: flex; flex-direction: column; justify-content: center; gap: 2px;
+}
+.kpi:last-child { border-right: none; }
+.kpi-label {
+  font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.kpi-value {
+  font-family: var(--ff-display); font-size: 1.8rem; font-weight: 700;
+  line-height: 1; color: var(--ink);
+  transition: color 0.25s;
+}
+.kpi-sub { font-size: 0.68rem; color: var(--ink-soft); opacity: 0.65; }
+.pos  { color: var(--green); }
+.neg  { color: #8b3a3a; }
+.warn { color: #8b6914; }
+
+/* ── DASHBOARD GRID ── */
+.dashboard {
+  display: grid;
+  grid-template-columns: 290px 1fr;
+  align-items: start;
+  min-height: calc(100vh - var(--hdr) - var(--strip));
+}
+
+/* ── INPUTS ── */
+.inputs-panel {
+  position: sticky;
+  top: calc(var(--hdr) + var(--strip));
+  height: calc(100vh - var(--hdr) - var(--strip));
+  overflow-y: auto;
+  background: var(--cream);
+  border-right: 1px solid var(--rule);
+  padding: 1.75rem 1.5rem;
+}
+.inputs-panel::-webkit-scrollbar { width: 3px; }
+.inputs-panel::-webkit-scrollbar-thumb { background: var(--sand); }
+
+.igroup { margin-bottom: 1.75rem; }
+.igroup-label {
+  font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--ink-soft); padding-bottom: 0.65rem;
+  border-bottom: 1px solid var(--rule); margin-bottom: 1.1rem;
+}
+.irow { margin-bottom: 1.35rem; }
+.irow-top {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 0.35rem;
+}
+.irow-name { font-size: 0.82rem; color: var(--ink); }
+.irow-val {
+  font-family: var(--ff-display); font-size: 1rem; font-weight: 600; color: var(--ink);
+}
+input[type=range] {
+  width: 100%; appearance: none; height: 2px;
+  background: var(--rule); outline: none; cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  appearance: none; width: 14px; height: 14px;
+  background: var(--ink); border-radius: 50%;
+  transition: background 0.2s;
+}
+input[type=range]:hover::-webkit-slider-thumb { background: var(--sky); }
+
+.fixed-block {
+  border-top: 1px solid var(--rule);
+  padding-top: 1.1rem; margin-top: 0.25rem;
+}
+.fixed-label {
+  font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--ink-soft); margin-bottom: 0.85rem;
+}
+.fixed-row {
+  display: flex; justify-content: space-between;
+  font-size: 0.76rem; color: var(--ink-soft);
+  margin-bottom: 0.42rem; line-height: 1.4;
+}
+.fixed-v {
+  font-family: var(--ff-display); font-size: 0.82rem;
+  font-weight: 600; color: var(--ink); white-space: nowrap; margin-left: 0.5rem;
+}
+
+/* ── CHARTS AREA ── */
+.charts-area {
+  padding: 2rem 2rem 2.5rem;
+  background: var(--cream-deep);
+  display: flex; flex-direction: column; gap: 2rem;
+}
+.csection {
+  background: var(--cream);
+  border-radius: var(--radius);
+  padding: 1.75rem 2rem;
+  box-shadow: 0 4px 20px -8px rgba(0,0,0,0.14);
+}
+.csection.deep { background: var(--cream-deep); }
+
+.eyebrow {
+  font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--ink-soft); margin-bottom: 0.3rem;
+}
+.stitle {
+  font-family: var(--ff-display); font-size: 1.45rem; font-weight: 600;
+  letter-spacing: 0.02em; text-transform: uppercase; color: var(--ink);
+  line-height: 1.1; margin-bottom: 1.25rem;
+}
+.rule-acc { width: 60px; height: 2px; background: var(--gold); margin-bottom: 0.7rem; }
+
+.callout {
+  border-left: 4px solid var(--gold);
+  padding: 0.85rem 1.25rem;
+  background: rgba(201,169,110,0.09);
+  margin-top: 1.25rem;
+}
+.callout p { font-size: 0.92rem; color: var(--ink); line-height: 1.65; font-style: italic; }
+
+.cwrap { position: relative; width: 100%; }
+
+/* Secondary 2-col */
+.secondary-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.75rem; }
+
+/* ── GAUGE ── */
+.gauge-wrap { position: relative; max-width: 280px; margin: 0 auto; }
+.gauge-center {
+  position: absolute; bottom: 8%; left: 50%;
+  transform: translateX(-50%);
+  text-align: center; pointer-events: none;
+  width: 100%;
+}
+.gauge-ratio {
+  font-family: var(--ff-display); font-size: 2.4rem; font-weight: 700;
+  line-height: 1; color: var(--ink);
+}
+.gauge-sub {
+  font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink-soft); margin-top: 0.2rem;
+}
+.gauge-zone {
+  font-family: var(--ff-display); font-size: 0.82rem; font-weight: 600;
+  margin-top: 0.15rem;
+}
+.gz-red    { color: #8b3a3a; }
+.gz-yellow { color: #8b6914; }
+.gz-green  { color: var(--green); }
+
+.gauge-meta-row {
+  text-align: center; margin: 0.6rem 0 1rem;
+  font-size: 0.78rem; color: var(--ink-soft);
+}
+.gauge-meta-row strong { color: var(--ink); font-weight: 600; }
+
+.gauge-bench { border-top: 1px solid var(--rule); padding-top: 0.9rem; margin-top: 0.25rem; }
+.bench-row { display: flex; align-items: center; gap: 0.55rem; margin-bottom: 0.4rem; }
+.bdot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.bdot-r { background: #b05050; }
+.bdot-y { background: var(--gold); }
+.bdot-g { background: var(--green); }
+.bench-text { font-size: 0.73rem; color: var(--ink-soft); line-height: 1.4; }
+
+.model-note {
+  text-align: center; font-size: 0.72rem; color: var(--ink-soft);
+  opacity: 0.55; line-height: 1.65; padding: 0.5rem 0 1rem;
+}
+.fixed-group-label {
+  font-size: 0.56rem; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--gold); margin: 0.7rem 0 0.28rem; opacity: 0.9;
+}
+.kpi-lg .kpi-value { font-size: 2.6rem; }
+.funnel-roas {
+  display: flex; align-items: baseline; gap: 0.6rem;
+  margin: 0.9rem 0 0.4rem; padding-top: 0.9rem;
+  border-top: 1px solid var(--rule);
+}
+.funnel-roas-label {
+  font-size: 0.58rem; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.funnel-roas-value {
+  font-family: var(--ff-display); font-size: 1.65rem; font-weight: 700;
+  color: var(--ink); line-height: 1;
+}
+.funnel-roas-note { font-size: 0.7rem; color: var(--ink-soft); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="hdr-left">
+    <span class="wordmark">Kubern Co</span>
+  </div>
+  <div class="hdr-center">
+    <div class="hdr-title">Revenue Model</div>
+  </div>
+  <div style="width:200px"></div>
+  <div class="hdr-client">Regional One Health — Labor &amp; Delivery · For Randy Sites</div>
+</header>
+
+<!-- METRIC STRIP -->
+<div class="metric-strip">
+  <div class="kpi">
+    <div class="kpi-label">Deliveries Added</div>
+    <div class="kpi-value" id="kpi-del">—</div>
+    <div class="kpi-sub">per month, above baseline</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">Year 1 Incremental Revenue</div>
+    <div class="kpi-value" id="kpi-rev">—</div>
+    <div class="kpi-sub">new deliveries only · LTV growth shown in chart</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">LTV : CAC</div>
+    <div class="kpi-value" id="kpi-lc">—</div>
+    <div class="kpi-sub" id="kpi-lc-sub">—</div>
+  </div>
+  <div class="kpi kpi-lg">
+    <div class="kpi-label">Return on Investment</div>
+    <div class="kpi-value" id="kpi-roi">—</div>
+    <div class="kpi-sub" id="kpi-roi-sub">—</div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dashboard">
+
+  <!-- INPUTS -->
+  <aside class="inputs-panel">
+    <div class="igroup">
+      <div class="igroup-label">CFO Inputs</div>
+
+      <div class="irow">
+        <div class="irow-top">
+          <span class="irow-name">Monthly Ad Spend</span>
+          <span class="irow-val" id="d-ad">$2,000</span>
+        </div>
+        <input type="range" id="sl-ad" min="0" max="20000" step="500" value="2000">
+      </div>
+
+      <div class="irow">
+        <div class="irow-top">
+          <span class="irow-name">Average Revenue / Delivery</span>
+          <span class="irow-val" id="d-rev">$5,000</span>
+        </div>
+        <input type="range" id="sl-rev" min="4000" max="12000" step="250" value="5000">
+      </div>
+    </div>
+
+    <div class="igroup">
+      <div class="igroup-label">Marketing Levers</div>
+
+      <div class="irow">
+        <div class="irow-top">
+          <span class="irow-name">Click → Inquiry</span>
+          <span class="irow-val" id="d-cti">5%</span>
+        </div>
+        <input type="range" id="sl-cti" min="1" max="20" step="1" value="5">
+      </div>
+
+      <div class="irow">
+        <div class="irow-top">
+          <span class="irow-name">Inquiry → Enrollment</span>
+          <span class="irow-val" id="d-ite">40%</span>
+        </div>
+        <input type="range" id="sl-ite" min="10" max="80" step="5" value="40">
+      </div>
+    </div>
+
+    <div class="fixed-block">
+      <div class="fixed-label">Fixed Assumptions</div>
+      <div class="fixed-row"><span>Monthly Engagement</span><span class="fixed-v">$12,500</span></div>
+      <div class="fixed-group-label">Current Volume</div>
+      <div class="fixed-row"><span>Deliveries / month (Q4 2025 actual)</span><span class="fixed-v">188</span></div>
+      <div class="fixed-row"><span>Trend without engagement</span><span class="fixed-v">−153/yr</span></div>
+      <div class="fixed-group-label">Acquisition</div>
+      <div class="fixed-row"><span>Cost per click (Memphis maternity)</span><span class="fixed-v">$5</span></div>
+      <div class="fixed-row"><span>Organic enrollments / month</span><span class="fixed-v">6</span></div>
+      <div class="fixed-group-label">Mother LTV Math</div>
+      <div class="fixed-row"><span>Prenatal → delivery rate</span><span class="fixed-v">50%</span></div>
+      <div class="fixed-row"><span>Deliveries per mother (census)</span><span class="fixed-v">2.0×</span></div>
+      <div class="fixed-row"><span>LTV retention rate</span><span class="fixed-v">75%</span></div>
+    </div>
+  </aside>
+
+  <!-- CHARTS -->
+  <div class="charts-area">
+
+    <!-- TWO FUTURES -->
+    <div class="csection">
+      <div class="rule-acc"></div>
+      <div class="eyebrow">36-Month Projection — Monthly Revenue</div>
+      <div class="stitle">Two Futures</div>
+      <div class="cwrap" style="height:320px">
+        <canvas id="c-futures"></canvas>
+      </div>
+      <div class="callout">
+        <p>The gap between the lines widens every month engagement is deferred — new deliveries plus returning mothers compound over time. The Year 1 Incremental KPI counts only first-delivery revenue; the chart gap grows beyond that as retained mothers return. At −153 deliveries per year, Regional One falls below 2,000 annual deliveries by mid-2027 — a residency training threshold. The engagement does not reverse the structural trend; it adds durable volume on top of it.</p>
+      </div>
+    </div>
+
+    <!-- SECONDARY ROW -->
+    <div class="secondary-row">
+
+      <!-- FUNNEL -->
+      <div class="csection">
+        <div class="rule-acc"></div>
+        <div class="eyebrow">Monthly Acquisition Funnel</div>
+        <div class="stitle">Clicks to Deliveries</div>
+        <div class="cwrap" style="height:200px">
+          <canvas id="c-funnel"></canvas>
+        </div>
+        <div class="funnel-roas">
+          <span class="funnel-roas-label">Return on Ad Spend</span>
+          <span class="funnel-roas-value" id="funnel-roas">—</span>
+          <span class="funnel-roas-note" id="funnel-roas-note">annual</span>
+        </div>
+        <div class="callout">
+          <p>Organic enrollments (6/month) bypass the click funnel entirely and convert at the same 50% prenatal-to-delivery rate.</p>
+        </div>
+      </div>
+
+      <!-- GAUGE -->
+      <div class="csection deep">
+        <div class="rule-acc"></div>
+        <div class="eyebrow">Acquisition Economics</div>
+        <div class="stitle">LTV : CAC Ratio</div>
+        <div class="gauge-wrap">
+          <div class="cwrap" style="height:170px">
+            <canvas id="c-gauge"></canvas>
+          </div>
+          <div class="gauge-center">
+            <div class="gauge-ratio" id="g-ratio">—</div>
+            <div class="gauge-sub">LTV : CAC</div>
+            <div class="gauge-zone" id="g-zone">—</div>
+          </div>
+        </div>
+        <div class="gauge-meta-row">
+          CAC: <strong id="g-cac">—</strong>&ensp;·&ensp;LTV: <strong id="g-ltv">—</strong>
+        </div>
+        <div class="gauge-bench">
+          <div class="bench-row"><div class="bdot bdot-r"></div><span class="bench-text">Below 1:1 — losing money per mother acquired</span></div>
+          <div class="bench-row"><div class="bdot bdot-y"></div><span class="bench-text">1:1 to 3:1 — covering costs; below industry minimum</span></div>
+          <div class="bench-row"><div class="bdot bdot-g"></div><span class="bench-text">Above 3:1 — healthy; industry standard minimum</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ASSUMPTIONS & DISCLAIMERS -->
+    <div class="csection">
+      <div class="rule-acc"></div>
+      <div class="eyebrow">Model Transparency</div>
+      <div class="stitle" style="margin-bottom:1.25rem">Assumptions &amp; Limitations</div>
+
+      <div class="callout" style="margin-top:0;margin-bottom:1.5rem">
+        <p style="font-style:normal;font-size:0.92rem;line-height:1.75">
+          <strong>Every fixed assumption in this model runs against the upside.</strong>
+          The prenatal-to-delivery rate is set at 50% — meaning the model already assumes half of all enrolled mothers deliver elsewhere.
+          The revenue figure excludes NICU, postpartum, and GYN follow-up entirely.
+          The decline rate uses the 20-year historical average, not the steeper recent pace.
+          Despite these haircuts, the engagement produces a healthy LTV:CAC and positive ROI at default settings.
+          Sliding any assumption toward reality only improves the numbers.
+        </p>
+      </div>
+
+      <div style="font-size:0.82rem;line-height:1.85;color:var(--ink-soft);display:flex;flex-direction:column;gap:0.9rem">
+        <p><strong style="color:var(--ink)">Fixed inputs.</strong> Retainer ($12,500/month), cost per click ($5, Memphis maternity search), organic enrollments (6/month), and delivery decline (−153/year, 20-year average — Q3→Q4 2025 data suggests this is conservative). LTV is 1.75× revenue per delivery: 1 guaranteed first delivery + 75% probability of return for a second (census-verified average of 2.0 children per mother). Retained mothers compound in the chart; the Year 1 KPI reflects first deliveries only.</p>
+
+        <p><strong style="color:var(--ink)">The one operating assumption.</strong> The funnel runs — ads generate clicks at the modeled CPC, inquiries convert at the modeled rate, and enrollment follow-up closes them. If any stage underperforms, the levers above update every output in real time.</p>
+
+        <p><strong style="color:var(--ink)">What this model doesn't count.</strong> Downstream revenue from NICU, postpartum, and GYN follow-up — omitted here, additive to LTV if included. The ACGME residency threshold: at −153/year, Regional One falls below 2,000 annual deliveries by mid-2027. That program review risk has no revenue expression.</p>
+      </div>
+    </div>
+
+    <div class="model-note">
+      Directional model — not audited figures. Revenue assumptions are CFO-adjustable above. Fixed conversion rates are marketer estimates based on Memphis maternity search data.
+      Present as illustrative. &nbsp;·&nbsp; Kubern Co &nbsp;·&nbsp; Updated May 2026
+    </div>
+
+  </div><!-- /charts-area -->
+</div><!-- /dashboard -->
+
+<script>
+// ── CONSTANTS ──────────────────────────────────────────────
+const F = {
+  CPC:             5,
+  organic:         6,
+  prenatalConv:    0.50,
+  ltvMult:         1.75,
+  ltvRetention:    0.75,
+  retainer:        12500,
+  baseMonthly:     188,   // Q4 2025 actual: 563 deliveries ÷ 3 months
+  declinePerMonth: 153 / 12,
+};
+
+const CHART_START_YEAR  = 2026;
+const CHART_START_MONTH = 5;   // May, 1-indexed
+const MO_ABBR = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+// ── STATE ──────────────────────────────────────────────────
+const S = { adSpend: 2000, rev: 5000, cti: 0.05, ite: 0.40 };
+
+// ── ENGINE ─────────────────────────────────────────────────
+function calc(s) {
+  const clicks      = s.adSpend / F.CPC;
+  const adInq       = clicks * s.cti;
+  const adEnroll    = adInq * s.ite;
+  const totalEnroll = F.organic + adEnroll;
+  const dAdded      = totalEnroll * F.prenatalConv;
+
+  const ltv     = s.rev * F.ltvMult;
+  const mothers = dAdded;
+  const mCost   = F.retainer + s.adSpend;
+  const cac     = mothers > 0 ? mCost / mothers : Infinity;
+  const lc      = isFinite(cac) && cac > 0 ? ltv / cac : 0;
+
+  const annInc  = dAdded * 12 * s.rev;
+  const annCost = mCost * 12;
+  const roas    = s.adSpend > 0 ? annInc / (s.adSpend * 12) : null;
+  const roi     = (annInc - annCost) / annCost;
+
+  // Two futures (37 monthly points) — declinePerMonth is annual rate ÷ 12
+  const tfLabels = [], tfOut = [], tfIn = [];
+  for (let m = 0; m <= 36; m++) {
+    const absIdx   = CHART_START_MONTH - 1 + m;
+    const absYear  = CHART_START_YEAR + Math.floor(absIdx / 12);
+    const absMonth = absIdx % 12;
+    tfLabels.push(
+      m === 0          ? 'Now'                                          :
+      m % 12 === 0     ? String(absYear)                                :
+      m % 6  === 0     ? `${MO_ABBR[absMonth]} '${String(absYear).slice(-2)}` :
+                         ''
+    );
+    const base  = Math.max(0, F.baseMonthly - (F.declinePerMonth / 12) * m);
+    const bonus = dAdded * F.ltvRetention * (m / 12) * 0.5;
+    tfOut.push(+(base * s.rev).toFixed(0));
+    tfIn.push(+(Math.max(0, base + dAdded + bonus) * s.rev).toFixed(0));
+  }
+
+  // Funnel (monthly)
+  const funnel = {
+    labels: ['Ad Clicks', 'Ad Inquiries', 'Total Enrollments', 'Deliveries Added'],
+    data:   [Math.round(clicks), Math.round(adInq), +totalEnroll.toFixed(1), +dAdded.toFixed(1)],
+  };
+
+  return {
+    dAdded: +dAdded.toFixed(1),
+    ltv: Math.round(ltv),
+    cac: isFinite(cac) ? Math.round(cac) : null,
+    lc:  +lc.toFixed(2),
+    annInc: Math.round(annInc),
+    annCost: Math.round(annCost),
+    roas, roi: +(roi * 100).toFixed(1),
+    tf: { labels: tfLabels, out: tfOut, in: tfIn },
+    funnel,
+  };
+}
+
+// ── FORMATTERS ─────────────────────────────────────────────
+function fmtM(n) {
+  if (n >= 1e6) return '$' + (n/1e6).toFixed(1) + 'M';
+  if (n >= 1e3) return '$' + (n/1e3).toFixed(0) + 'K';
+  return '$' + Math.round(n).toLocaleString();
+}
+function fmtFull(n) { return '$' + Math.round(n).toLocaleString(); }
+function fmtRoi(n)  { return (n >= 0 ? '+' : '') + n.toFixed(1) + '%'; }
+
+// ── CHART COLORS ───────────────────────────────────────────
+const C = {
+  withLine:    '#1d3e49',
+  withFill:    'rgba(29,62,73,0.07)',
+  withoutLine: 'rgba(160,90,90,0.85)',
+  goldArr:     ['rgba(201,169,110,0.95)','rgba(201,169,110,0.7)','rgba(201,169,110,0.45)','rgba(201,169,110,0.28)'],
+  gRed:        'rgba(160,80,80,0.85)',
+  gYellow:     'rgba(201,169,110,0.85)',
+  gGreen:      'rgba(61,107,71,0.85)',
+  gZoneRed:    'rgba(160,80,80,0.2)',
+  gZoneYellow: 'rgba(201,169,110,0.2)',
+  gZoneGreen:  'rgba(61,107,71,0.2)',
+  gTrack:      'rgba(29,62,73,0.08)',
+};
+
+const TICK  = { family: 'EB Garamond, Georgia, serif', size: 11 };
+const TBODY = { family: 'EB Garamond, Georgia, serif', size: 13 };
+const TIP   = {
+  backgroundColor: 'rgba(29,62,73,0.93)',
+  titleColor: '#d9cdb3', bodyColor: '#f3ede1',
+  padding: 11, cornerRadius: 8,
+  titleFont: { family: 'Playfair Display, Georgia, serif', size: 12 },
+  bodyFont: TBODY,
+};
+
+// ── CHART INSTANCES ────────────────────────────────────────
+let cFutures, cFunnel, cGauge;
+
+function initCharts(m) {
+  // TWO FUTURES — "With Engagement" is dataset[0] so it renders first in tooltip
+  cFutures = new Chart(document.getElementById('c-futures'), {
+    type: 'line',
+    data: {
+      labels: m.tf.labels,
+      datasets: [
+        {
+          label: 'With Engagement',
+          data: m.tf.in,
+          borderColor: C.withLine, borderWidth: 2.5,
+          pointRadius: 0, tension: 0.3,
+          fill: { target: 1, above: C.withFill },
+        },
+        {
+          label: 'Without Engagement',
+          data: m.tf.out,
+          borderColor: C.withoutLine, borderWidth: 2,
+          borderDash: [6,4], pointRadius: 0, tension: 0.3, fill: false,
+        },
+      ],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, animation: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          position: 'top', align: 'end',
+          labels: { font: TBODY, color: '#34525c', boxWidth: 18, padding: 14 },
+        },
+        tooltip: {
+          ...TIP,
+          callbacks: { label: c => ` ${c.dataset.label}: ${fmtM(c.parsed.y)}/mo` },
+        },
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { font: TICK, color: '#34525c', maxRotation: 0 },
+          border: { color: 'rgba(29,62,73,0.15)' },
+        },
+        y: {
+          grid: { color: 'rgba(29,62,73,0.07)' },
+          ticks: { font: TICK, color: '#34525c', callback: v => fmtM(v), maxTicksLimit: 6 },
+          border: { display: false },
+        },
+      },
+    },
+  });
+
+  // FUNNEL
+  cFunnel = new Chart(document.getElementById('c-funnel'), {
+    type: 'bar',
+    data: {
+      labels: m.funnel.labels,
+      datasets: [{ data: m.funnel.data, backgroundColor: C.goldArr, borderWidth: 0, borderRadius: 4 }],
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false, animation: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          ...TIP,
+          callbacks: { label: c => ` ${(+c.parsed.x).toLocaleString()} / month` },
+        },
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(29,62,73,0.07)' },
+          ticks: { font: TICK, color: '#34525c' },
+          border: { display: false },
+        },
+        y: {
+          grid: { display: false },
+          ticks: { font: { ...TICK, size: 12 }, color: '#1d3e49' },
+          border: { display: false },
+        },
+      },
+    },
+  });
+
+  // GAUGE
+  initGauge(m.lc);
+}
+
+function initGauge(ratio) {
+  cGauge = new Chart(document.getElementById('c-gauge'), {
+    type: 'doughnut',
+    data: {
+      datasets: [
+        {
+          data: [100/6, 200/6, 300/6],
+          backgroundColor: [C.gZoneRed, C.gZoneYellow, C.gZoneGreen],
+          borderWidth: 0, weight: 0.22,
+        },
+        {
+          data: gaugeData(ratio),
+          backgroundColor: [gaugeColor(ratio), C.gTrack],
+          borderWidth: 0, weight: 1,
+        },
+      ],
+    },
+    options: {
+      rotation: 270, circumference: 180,
+      cutout: '66%',
+      responsive: true, maintainAspectRatio: false, animation: false,
+      plugins: { legend: { display: false }, tooltip: { enabled: false } },
+    },
+  });
+  updateGaugeDom(ratio);
+}
+
+function gaugeData(ratio) {
+  const f = Math.min(Math.max(ratio, 0), 6) / 6;
+  return [f * 100, (1 - f) * 100];
+}
+
+function gaugeColor(r) {
+  if (r < 1) return C.gRed;
+  if (r < 3) return C.gYellow;
+  return C.gGreen;
+}
+
+function gaugeZone(r) {
+  if (r < 1) return ['Danger Zone',     'gz-red'];
+  if (r < 3) return ['Below Minimum',   'gz-yellow'];
+  return          ['Healthy',           'gz-green'];
+}
+
+function updateGaugeDom(ratio) {
+  document.getElementById('g-ratio').textContent = ratio.toFixed(1) + ':1';
+  const zEl = document.getElementById('g-zone');
+  const [text, cls] = gaugeZone(ratio);
+  zEl.textContent = text;
+  zEl.className = 'gauge-zone ' + cls;
+}
+
+// ── RENDER ─────────────────────────────────────────────────
+function render(m) {
+  // Metric strip
+  document.getElementById('kpi-del').textContent = m.dAdded.toFixed(1);
+  document.getElementById('kpi-rev').textContent = fmtM(m.annInc);
+
+  const lcEl = document.getElementById('kpi-lc');
+  lcEl.textContent = m.lc.toFixed(1) + ':1';
+  lcEl.className = 'kpi-value ' + (m.lc >= 3 ? 'pos' : m.lc >= 1 ? 'warn' : 'neg');
+  document.getElementById('kpi-lc-sub').textContent = gaugeZone(m.lc)[0];
+
+  const roiEl = document.getElementById('kpi-roi');
+  roiEl.textContent = fmtRoi(m.roi);
+  roiEl.className = 'kpi-value ' + (m.roi >= 0 ? 'pos' : 'neg');
+  document.getElementById('kpi-roi-sub').textContent = `vs ${fmtM(m.annCost)} annual cost`;
+
+  // ROAS in funnel
+  const roasEl = document.getElementById('funnel-roas');
+  const roasNote = document.getElementById('funnel-roas-note');
+  if (m.roas !== null) {
+    roasEl.textContent = m.roas.toFixed(1) + '×';
+    roasNote.textContent = 'return on ad spend (annual)';
+  } else {
+    roasEl.textContent = 'N/A';
+    roasNote.textContent = 'no ad spend entered';
+  }
+
+  // Gauge meta
+  document.getElementById('g-cac').textContent = m.cac !== null ? fmtFull(m.cac) : 'N/A';
+  document.getElementById('g-ltv').textContent = fmtFull(m.ltv);
+
+  // Charts
+  cFutures.data.datasets[0].data = m.tf.in;
+  cFutures.data.datasets[1].data = m.tf.out;
+  cFutures.update('none');
+
+  cFunnel.data.datasets[0].data = m.funnel.data;
+  cFunnel.update('none');
+
+  cGauge.data.datasets[1].data = gaugeData(m.lc);
+  cGauge.data.datasets[1].backgroundColor[0] = gaugeColor(m.lc);
+  cGauge.update('none');
+  updateGaugeDom(m.lc);
+}
+
+// ── INPUTS ─────────────────────────────────────────────────
+function bind(sliderId, displayId, stateKey, toState, toDisplay) {
+  const sl = document.getElementById(sliderId);
+  const dp = document.getElementById(displayId);
+  sl.addEventListener('input', () => {
+    const v = Number(sl.value);
+    dp.textContent = toDisplay(v);
+    S[stateKey] = toState(v);
+    render(calc(S));
+  });
+}
+
+bind('sl-ad',  'd-ad',  'adSpend', v => v,       v => '$' + v.toLocaleString());
+bind('sl-rev', 'd-rev', 'rev',     v => v,       v => '$' + v.toLocaleString());
+bind('sl-cti', 'd-cti', 'cti',     v => v / 100, v => v + '%');
+bind('sl-ite', 'd-ite', 'ite',     v => v / 100, v => v + '%');
+
+// ── INIT ───────────────────────────────────────────────────
+const initial = calc(S);
+initCharts(initial);
+render(initial);
+</script>
+</body>
+</html>
